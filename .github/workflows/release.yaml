@@ -9,42 +9,41 @@ on:
 permissions:
   contents: write
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   release:
-    runs-on: self-hosted
+    runs-on: [self-hosted, linux, x64]
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Generate tag
         id: tag
-        shell: bash
         run: |
           TAG="v$(date +'%Y.%m.%d')-${GITHUB_RUN_NUMBER}"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
-      - name: Create git tag
-        shell: bash
+      - name: Create and push tag
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name github-actions
+          git config user.email github-actions@github.com
           git tag "${{ steps.tag.outputs.tag }}"
           git push origin "${{ steps.tag.outputs.tag }}"
 
-      - name: Create zip archive from tracked files
-        shell: bash
+      - name: Create release zip
         run: |
           mkdir -p dist
-          git archive --format=zip --output="dist/project-${{ steps.tag.outputs.tag }}.zip" HEAD
+          git archive --format=zip \
+            --output="dist/project-${{ steps.tag.outputs.tag }}.zip" \
+            HEAD
 
-      - name: Create GitHub Release and upload zip
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.tag.outputs.tag }}
-          name: ${{ steps.tag.outputs.tag }}
           files: dist/project-${{ steps.tag.outputs.tag }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
