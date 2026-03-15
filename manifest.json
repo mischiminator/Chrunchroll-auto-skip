@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Crunchyroll Auto Skip Plus",
+  "version": "1.1.0",
+  "description": "Auto-skip recaps, intros, outros, and previews on Crunchyroll with individual toggles, a master switch, preview seeking fallback, and debug logging.",
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://www.crunchyroll.com/*",
+    "https://crunchyroll.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Crunchyroll Auto Skip Plus"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.crunchyroll.com/*",
+        "https://crunchyroll.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

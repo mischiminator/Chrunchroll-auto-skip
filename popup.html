@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crunchyroll Auto Skip Plus</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <main class="popup">
+    <div class="header">
+      <img src="icons/icon48.png" alt="Extension icon" class="logo" />
+      <div>
+        <h1>Crunchyroll Auto Skip Plus</h1>
+        <p class="sub">Skip player segments automatically.</p>
+      </div>
+    </div>
+
+    <section class="card accent">
+      <label class="row master-row" for="enabled">
+        <div>
+          <div class="label">Master switch</div>
+          <div class="help">Globally enable or disable all actions.</div>
+        </div>
+        <span class="switch">
+          <input id="enabled" type="checkbox" />
+          <span class="slider"></span>
+        </span>
+      </label>
+    </section>
+
+    <section class="card">
+      <div class="section-title">Segment controls</div>
+
+      <label class="row" for="skipRecaps">
+        <div>
+          <div class="label">Recaps</div>
+          <div class="help">Auto-click recap skips when available.</div>
+        </div>
+        <span class="switch">
+          <input id="skipRecaps" type="checkbox" />
+          <span class="slider"></span>
+        </span>
+      </label>
+
+      <label class="row" for="skipIntros">
+        <div>
+          <div class="label">Intros</div>
+          <div class="help">Skip opening sequences.</div>
+        </div>
+        <span class="switch">
+          <input id="skipIntros" type="checkbox" />
+          <span class="slider"></span>
+        </span>
+      </label>
+
+      <label class="row" for="skipOutros">
+        <div>
+          <div class="label">Outros</div>
+          <div class="help">Skip endings and credits.</div>
+        </div>
+        <span class="switch">
+          <input id="skipOutros" type="checkbox" />
+          <span class="slider"></span>
+        </span>
+      </label>
+
+      <label class="row" for="skipPreviews">
+        <div>
+          <div class="label">Previews</div>
+          <div class="help">Skip next-episode previews.</div>
+        </div>
+        <span class="switch">
+          <input id="skipPreviews" type="checkbox" />
+          <span class="slider"></span>
+        </span>
+      </label>
+    </section>
+
+    <section class="card">
+      <div class="section-title">Advanced</div>
+
+      <label class="row" for="previewSeekFallback">
+        <div>
+          <div class="label">Preview seek fallback</div>
+          <div class="help">Seek forward if no preview skip button appears.</div>
+        </div>
+        <span class="switch">
+          <input id="previewSeekFallback" type="checkbox" />
+          <span class="slider"></span>
+        </span>
+      </label>
+
+      <label class="stacked" for="previewSeekSeconds">
+        <div class="label">Fallback seek length</div>
+        <div class="help">How far the player should jump during preview fallback.</div>
+        <div class="input-row">
+          <input id="previewSeekSeconds" type="number" min="15" max="180" step="5" />
+          <span class="suffix">seconds</span>
+        </div>
+      </label>
+
+      <label class="row" for="debugLogging">
+        <div>
+          <div class="label">Debug logging</div>
+          <div class="help">Write extension activity to DevTools console.</div>
+        </div>
+        <span class="switch">
+          <input id="debugLogging" type="checkbox" />
+          <span class="slider"></span>
+        </span>
+      </label>
+    </section>
+
+    <footer class="footer">
+      Load unpacked in <strong>chrome://extensions</strong>, then refresh the Crunchyroll tab.
+    </footer>
+  </main>
+
+  <script src="popup.js"></script>
+</body>
+</html>
