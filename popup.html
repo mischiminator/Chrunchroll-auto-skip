@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Crunchyroll Auto Skip Plus</title>
+  <title>__MSG_extName__</title>
   <link rel="stylesheet" href="popup.css" />
 </head>
 <body>
@@ -11,16 +11,16 @@
     <div class="header">
       <img src="icons/icon48.png" alt="Extension icon" class="logo" />
       <div>
-        <h1>Crunchyroll Auto Skip Plus</h1>
-        <p class="sub">Skip player segments automatically.</p>
+        <h1>__MSG_extName__</h1>
+        <p class="sub">__MSG_extTitle__</p>
       </div>
     </div>
 
     <section class="card accent">
       <label class="row master-row" for="enabled">
         <div>
-          <div class="label">Master switch</div>
-          <div class="help">Globally enable or disable all actions.</div>
+          <div class="label">__MSG_masterSwitch__</div>
+          <div class="help">__MSG_masterSwitchHelp__</div>
         </div>
         <span class="switch">
           <input id="enabled" type="checkbox" />
@@ -30,12 +30,12 @@
     </section>
 
     <section class="card">
-      <div class="section-title">Segment controls</div>
+      <div class="section-title">__MSG_segmentControls__</div>
 
       <label class="row" for="skipRecaps">
         <div>
-          <div class="label">Recaps</div>
-          <div class="help">Auto-click recap skips when available.</div>
+          <div class="label">__MSG_recaps__</div>
+          <div class="help">__MSG_recapsHelp__</div>
         </div>
         <span class="switch">
           <input id="skipRecaps" type="checkbox" />
@@ -45,8 +45,8 @@
 
       <label class="row" for="skipIntros">
         <div>
-          <div class="label">Intros</div>
-          <div class="help">Skip opening sequences.</div>
+          <div class="label">__MSG_intros__</div>
+          <div class="help">__MSG_introsHelp__</div>
         </div>
         <span class="switch">
           <input id="skipIntros" type="checkbox" />
@@ -56,8 +56,8 @@
 
       <label class="row" for="skipOutros">
         <div>
-          <div class="label">Outros</div>
-          <div class="help">Skip endings and credits.</div>
+          <div class="label">__MSG_outros__</div>
+          <div class="help">__MSG_outrosHelp__</div>
         </div>
         <span class="switch">
           <input id="skipOutros" type="checkbox" />
@@ -67,8 +67,8 @@
 
       <label class="row" for="skipPreviews">
         <div>
-          <div class="label">Previews</div>
-          <div class="help">Skip next-episode previews.</div>
+          <div class="label">__MSG_previews__</div>
+          <div class="help">__MSG_previewsHelp__</div>
         </div>
         <span class="switch">
           <input id="skipPreviews" type="checkbox" />
@@ -78,42 +78,57 @@
     </section>
 
     <section class="card">
-      <div class="section-title">Advanced</div>
+      <div class="section-title collapsible-header" id="advancedToggle">
+        __MSG_advanced__
+        <span class="toggle-icon">▼</span>
+      </div>
+      
+      <div id="advancedContent" class="collapsible-content collapsed">
+        <label class="row" for="previewSeekFallback">
+          <div>
+            <div class="label">__MSG_previewSeekFallback__</div>
+            <div class="help">__MSG_previewSeekFallbackHelp__</div>
+          </div>
+          <span class="switch">
+            <input id="previewSeekFallback" type="checkbox" />
+            <span class="slider"></span>
+          </span>
+        </label>
 
-      <label class="row" for="previewSeekFallback">
-        <div>
-          <div class="label">Preview seek fallback</div>
-          <div class="help">Seek forward if no preview skip button appears.</div>
-        </div>
-        <span class="switch">
-          <input id="previewSeekFallback" type="checkbox" />
-          <span class="slider"></span>
-        </span>
-      </label>
+        <label class="stacked" for="previewSeekSeconds">
+          <div class="label">__MSG_fallbackSeekLength__</div>
+          <div class="help">__MSG_fallbackSeekLengthHelp__</div>
+          <div class="input-row">
+            <input id="previewSeekSeconds" type="number" min="15" max="180" step="5" />
+            <span class="suffix">__MSG_seconds__</span>
+          </div>
+        </label>
 
-      <label class="stacked" for="previewSeekSeconds">
-        <div class="label">Fallback seek length</div>
-        <div class="help">How far the player should jump during preview fallback.</div>
-        <div class="input-row">
-          <input id="previewSeekSeconds" type="number" min="15" max="180" step="5" />
-          <span class="suffix">seconds</span>
-        </div>
-      </label>
+        <label class="stacked" for="language">
+          <div class="label">__MSG_language__</div>
+          <div class="help">__MSG_languageHelp__</div>
+          <select id="language">
+            <option value="en">English</option>
+            <option value="de">Deutsch</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+          </select>
+        </label>
 
-      <label class="row" for="debugLogging">
-        <div>
-          <div class="label">Debug logging</div>
-          <div class="help">Write extension activity to DevTools console.</div>
-        </div>
-        <span class="switch">
-          <input id="debugLogging" type="checkbox" />
-          <span class="slider"></span>
-        </span>
-      </label>
+        <label class="stacked" for="skipDelay">
+          <div class="label">__MSG_skipDelay__</div>
+          <div class="help">__MSG_skipDelayHelp__</div>
+          <div class="input-row">
+            <input id="skipDelay" type="range" min="0" max="10" step="1" />
+            <span id="skipDelayValue">3</span>
+            <span class="suffix">__MSG_seconds__</span>
+          </div>
+        </label>
+      </div>
     </section>
 
     <footer class="footer">
-      Load unpacked in <strong>chrome://extensions</strong>, then refresh the Crunchyroll tab.
+      <a href="https://github.com/mischiminator/Chrunchroll-auto-skip">Github</a>
     </footer>
   </main>
 

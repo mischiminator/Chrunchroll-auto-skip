@@ -1,0 +1,98 @@
+{
+  "extName": {
+    "message": "Crunchyroll Auto Skip",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Omite resúmenes, intros, outros y previsualizaciones en Crunchyroll.",
+    "description": "Extension short description"
+  },
+  "extTitle": {
+    "message": "Omite automáticamente segmentos del reproductor.",
+    "description": "Extension popup title"
+  },
+  "masterSwitch": {
+    "message": "Interruptor maestro",
+    "description": "Main toggle control label"
+  },
+  "masterSwitchHelp": {
+    "message": "Habilita o deshabilita todas las acciones.",
+    "description": "Master switch help text"
+  },
+  "segmentControls": {
+    "message": "Segmentos",
+    "description": "Section title for segment options"
+  },
+  "recaps": {
+    "message": "Resúmenes",
+    "description": "Recap skip option label"
+  },
+  "recapsHelp": {
+    "message": "Haz clic automáticamente en botones para omitir resúmenes cuando están disponibles.",
+    "description": "Recap skip option help text"
+  },
+  "intros": {
+    "message": "Intros",
+    "description": "Intro skip option label"
+  },
+  "introsHelp": {
+    "message": "Omite las secuencias de apertura.",
+    "description": "Intro skip option help text"
+  },
+  "outros": {
+    "message": "Outros",
+    "description": "Outro skip option label"
+  },
+  "outrosHelp": {
+    "message": "Omite finales y créditos.",
+    "description": "Outro skip option help text"
+  },
+  "previews": {
+    "message": "Previsualizaciones",
+    "description": "Preview skip option label"
+  },
+  "previewsHelp": {
+    "message": "Omite las previsualizaciones del próximo episodio.",
+    "description": "Preview skip option help text"
+  },
+  "advanced": {
+    "message": "Avanzado",
+    "description": "Advanced settings section title"
+  },
+  "previewSeekFallback": {
+    "message": "Búsqueda alternativa",
+    "description": "Preview seek fallback option label"
+  },
+  "previewSeekFallbackHelp": {
+    "message": "Avanza el reproductor si no aparece un botón para omitir la vista previa.",
+    "description": "Preview seek fallback help text"
+  },
+  "fallbackSeekLength": {
+    "message": "Duración de la búsqueda alternativa",
+    "description": "Fallback seek length option label"
+  },
+  "fallbackSeekLengthHelp": {
+    "message": "Cuántos segundos debe saltar el reproductor durante la búsqueda alternativa.",
+    "description": "Fallback seek length help text"
+  },
+  "seconds": {
+    "message": "segundos",
+    "description": "Time unit suffix"
+  },
+  "language": {
+    "message": "Idioma",
+    "description": "Language selection label"
+  },
+  "languageHelp": {
+    "message": "Elige el idioma de la interfaz de usuario.",
+    "description": "Language selection help text"
+  },
+  "skipDelay": {
+    "message": "Retraso de omisión",
+    "description": "Skip delay option label"
+  },
+  "skipDelayHelp": {
+    "message": "Retraso antes de intentar omitir segmentos (segundos)",
+    "description": "Skip delay help text"
+  }
+}

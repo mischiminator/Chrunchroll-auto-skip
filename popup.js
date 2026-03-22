@@ -1,12 +1,80 @@
+// Language management
+let currentLanguage = "en";
+let translations = {};
+
+// Map of element IDs to message keys for easy translation
+const translationMap = {
+  // Title and header
+  "extName": { selector: "h1" },
+  "extTitle": { selector: ".sub" },
+  
+  // Master switch section
+  "masterSwitch": { selector: "label[for='enabled'] .label" },
+  "masterSwitchHelp": { selector: "label[for='enabled'] .help" },
+  
+  // Segment controls section
+  "segmentControls": { selector: ".section-title:nth-of-type(1)" },
+  "recaps": { selector: "label[for='skipRecaps'] .label" },
+  "recapsHelp": { selector: "label[for='skipRecaps'] .help" },
+  "intros": { selector: "label[for='skipIntros'] .label" },
+  "introsHelp": { selector: "label[for='skipIntros'] .help" },
+  "outros": { selector: "label[for='skipOutros'] .label" },
+  "outrosHelp": { selector: "label[for='skipOutros'] .help" },
+  "previews": { selector: "label[for='skipPreviews'] .label" },
+  "previewsHelp": { selector: "label[for='skipPreviews'] .help" },
+  
+  // Advanced section
+  "advanced": { selector: "#advancedToggle" },
+  "previewSeekFallback": { selector: "label[for='previewSeekFallback'] .label" },
+  "previewSeekFallbackHelp": { selector: "label[for='previewSeekFallback'] .help" },
+  "fallbackSeekLength": { selector: "label[for='previewSeekSeconds'] .label" },
+  "fallbackSeekLengthHelp": { selector: "label[for='previewSeekSeconds'] .help" },
+  "seconds": { selector: ".suffix" },
+  "language": { selector: "label[for='language'] .label" },
+  "languageHelp": { selector: "label[for='language'] .help" },
+  "skipDelay": { selector: "label[for='skipDelay'] .label" },
+  "skipDelayHelp": { selector: "label[for='skipDelay'] .help" }
+};
+
+async function loadLanguage(lang) {
+  try {
+    const url = chrome.runtime.getURL(`_locales/${lang}/messages.json`);
+    const response = await fetch(url);
+    const data = await response.json();
+    translations[lang] = data;
+    return data;
+  } catch (err) {
+    console.error(`Failed to load language ${lang}:`, err);
+    return null;
+  }
+}
+
+function getMessage(key) {
+  if (translations[currentLanguage]?.[key]?.message) {
+    return translations[currentLanguage][key].message;
+  }
+  return chrome.i18n.getMessage(key) || `__MSG_${key}__`;
+}
+
+function translatePage() {
+  // Translate each element based on the translation map
+  for (const [key, config] of Object.entries(translationMap)) {
+    const elements = document.querySelectorAll(config.selector);
+    elements.forEach(element => {
+      element.textContent = getMessage(key);
+    });
+  }
+}
+
 const DEFAULT_SETTINGS = {
   enabled: true,
   skipRecaps: true,
   skipIntros: true,
   skipOutros: true,
   skipPreviews: true,
-  previewSeekFallback: true,
-  debugLogging: false,
-  previewSeekSeconds: 90
+  previewSeekFallback: false,
+  previewSeekSeconds: 90,
+  skipDelay: 3
 };
 
 const TOGGLE_IDS = [
@@ -15,8 +83,7 @@ const TOGGLE_IDS = [
   "skipIntros",
   "skipOutros",
   "skipPreviews",
-  "previewSeekFallback",
-  "debugLogging"
+  "previewSeekFallback"
 ];
 
 function getEl(id) {
@@ -27,6 +94,12 @@ function sanitizeSeekValue(value) {
   const parsed = Number(value);
   if (!Number.isFinite(parsed)) return DEFAULT_SETTINGS.previewSeekSeconds;
   return Math.min(180, Math.max(15, Math.round(parsed)));
+}
+
+function sanitizeDelayValue(value) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return DEFAULT_SETTINGS.skipDelay;
+  return Math.min(10, Math.max(0, Math.round(parsed)));
 }
 
 function applyDisabledState() {
@@ -65,16 +138,89 @@ function bindToggles() {
   seekInput.addEventListener("blur", commitSeekInput);
 }
 
-function init() {
+function setupEventListeners() {
+  // Setup language dropdown
+  const langSelect = getEl("language");
+  if (langSelect) {
+    langSelect.value = currentLanguage;
+    langSelect.addEventListener("change", (e) => {
+      currentLanguage = e.target.value;
+      chrome.storage.sync.set({ uiLanguage: currentLanguage });
+      translatePage();
+    });
+  }
+
+  // Setup collapsible advanced section
+  const advancedToggle = getEl("advancedToggle");
+  const advancedContent = getEl("advancedContent");
+  
+  if (advancedToggle && advancedContent) {
+    advancedToggle.addEventListener("click", () => {
+      advancedContent.classList.toggle("collapsed");
+      const icon = advancedToggle.querySelector(".toggle-icon");
+      icon.textContent = advancedContent.classList.contains("collapsed") ? "▼" : "▲";
+    });
+  }
+
+  // Setup toggles and settings
   chrome.storage.sync.get(DEFAULT_SETTINGS, (settings) => {
     for (const id of TOGGLE_IDS) {
-      getEl(id).checked = Boolean(settings[id]);
+      const el = getEl(id);
+      if (el) {
+        el.checked = Boolean(settings[id]);
+      }
     }
 
-    getEl("previewSeekSeconds").value = String(sanitizeSeekValue(settings.previewSeekSeconds));
+    const seekInput = getEl("previewSeekSeconds");
+    if (seekInput) {
+      seekInput.value = String(sanitizeSeekValue(settings.previewSeekSeconds));
+    }
+
+    const skipDelayInput = getEl("skipDelay");
+    if (skipDelayInput) {
+      skipDelayInput.value = String(settings.skipDelay || 3);
+      getEl("skipDelayValue").textContent = skipDelayInput.value;
+    }
 
     bindToggles();
     applyDisabledState();
+
+    if (skipDelayInput) {
+      const commitDelayInput = () => {
+        const value = sanitizeDelayValue(skipDelayInput.value);
+        skipDelayInput.value = String(value);
+        savePartial({ skipDelay: value });
+        getEl("skipDelayValue").textContent = String(value);
+      };
+      skipDelayInput.addEventListener("change", commitDelayInput);
+      skipDelayInput.addEventListener("blur", commitDelayInput);
+      skipDelayInput.addEventListener("input", () => {
+        getEl("skipDelayValue").textContent = skipDelayInput.value;
+        // Save on input to ensure it's saved even if not released
+        const value = sanitizeDelayValue(skipDelayInput.value);
+        savePartial({ skipDelay: value });
+      });
+    }
+  });
+}
+
+function init() {
+  // Detect browser language
+  const browserLang = chrome.i18n.getUILanguage().split("-")[0];
+  const supportedLangs = ["en", "de", "es", "fr"];
+  const defaultLang = supportedLangs.includes(browserLang) ? browserLang : "en";
+
+  // Check if user has saved a language preference
+  chrome.storage.sync.get({ uiLanguage: defaultLang }, async (stored) => {
+    currentLanguage = stored.uiLanguage;
+    
+    // Load all language files
+    for (const lang of supportedLangs) {
+      await loadLanguage(lang);
+    }
+    
+    translatePage();
+    setupEventListeners();
   });
 }
 
