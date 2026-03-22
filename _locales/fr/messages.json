@@ -1,0 +1,98 @@
+{
+  "extName": {
+    "message": "Crunchyroll Auto Skip",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Ignorez automatiquement les récapitulatifs, intros, outros et aperçus sur Crunchyroll.",
+    "description": "Extension short description"
+  },
+  "extTitle": {
+    "message": "Ignorer automatiquement les segments du lecteur.",
+    "description": "Extension popup title"
+  },
+  "masterSwitch": {
+    "message": "Interrupteur principal",
+    "description": "Main toggle control label"
+  },
+  "masterSwitchHelp": {
+    "message": "Active ou désactive toutes les actions.",
+    "description": "Master switch help text"
+  },
+  "segmentControls": {
+    "message": "Segments",
+    "description": "Section title for segment options"
+  },
+  "recaps": {
+    "message": "Récapitulatifs",
+    "description": "Recap skip option label"
+  },
+  "recapsHelp": {
+    "message": "Clique automatiquement sur les boutons pour passer les récapitulatifs quand ils sont disponibles.",
+    "description": "Recap skip option help text"
+  },
+  "intros": {
+    "message": "Intros",
+    "description": "Intro skip option label"
+  },
+  "introsHelp": {
+    "message": "Ignorer les séquences d'ouverture.",
+    "description": "Intro skip option help text"
+  },
+  "outros": {
+    "message": "Outros",
+    "description": "Outro skip option label"
+  },
+  "outrosHelp": {
+    "message": "Ignorer les fins et les crédits.",
+    "description": "Outro skip option help text"
+  },
+  "previews": {
+    "message": "Aperçus",
+    "description": "Preview skip option label"
+  },
+  "previewsHelp": {
+    "message": "Ignorez les aperçus du prochain épisode.",
+    "description": "Preview skip option help text"
+  },
+  "advanced": {
+    "message": "Avancé",
+    "description": "Advanced settings section title"
+  },
+  "previewSeekFallback": {
+    "message": "Recherche alternative",
+    "description": "Preview seek fallback option label"
+  },
+  "previewSeekFallbackHelp": {
+    "message": "Avance le lecteur s'il n'y a pas de bouton pour ignorer l'aperçu.",
+    "description": "Preview seek fallback help text"
+  },
+  "fallbackSeekLength": {
+    "message": "Durée de la recherche alternative",
+    "description": "Fallback seek length option label"
+  },
+  "fallbackSeekLengthHelp": {
+    "message": "Nombre de secondes à sauter lors de la recherche alternative.",
+    "description": "Fallback seek length help text"
+  },
+  "seconds": {
+    "message": "secondes",
+    "description": "Time unit suffix"
+  },
+  "language": {
+    "message": "Langue",
+    "description": "Language selection label"
+  },
+  "languageHelp": {
+    "message": "Choisir la langue de l'interface utilisateur.",
+    "description": "Language selection help text"
+  },
+  "skipDelay": {
+    "message": "Délai d'omission",
+    "description": "Skip delay option label"
+  },
+  "skipDelayHelp": {
+    "message": "Délai avant d'essayer d'ignorer les segments (secondes)",
+    "description": "Skip delay help text"
+  }
+}

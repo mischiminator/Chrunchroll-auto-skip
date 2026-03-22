@@ -1,0 +1,98 @@
+{
+  "extName": {
+    "message": "Crunchyroll Auto Skip",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Skip recaps, intros, outros and previews on Crunchyroll.",
+    "description": "Extension short description"
+  },
+  "extTitle": {
+    "message": "Skip player segments automatically.",
+    "description": "Extension popup title"
+  },
+  "masterSwitch": {
+    "message": "Master switch",
+    "description": "Main toggle control label"
+  },
+  "masterSwitchHelp": {
+    "message": "Enable or disable all actions.",
+    "description": "Master switch help text"
+  },
+  "segmentControls": {
+    "message": "Segments",
+    "description": "Section title for segment options"
+  },
+  "recaps": {
+    "message": "Recaps",
+    "description": "Recap skip option label"
+  },
+  "recapsHelp": {
+    "message": "Auto-click recap skip buttons when available.",
+    "description": "Recap skip option help text"
+  },
+  "intros": {
+    "message": "Intros",
+    "description": "Intro skip option label"
+  },
+  "introsHelp": {
+    "message": "Skip opening sequences.",
+    "description": "Intro skip option help text"
+  },
+  "outros": {
+    "message": "Outros",
+    "description": "Outro skip option label"
+  },
+  "outrosHelp": {
+    "message": "Skip endings and credits.",
+    "description": "Outro skip option help text"
+  },
+  "previews": {
+    "message": "Previews",
+    "description": "Preview skip option label"
+  },
+  "previewsHelp": {
+    "message": "Skip next-episode previews.",
+    "description": "Preview skip option help text"
+  },
+  "advanced": {
+    "message": "Advanced",
+    "description": "Advanced settings section title"
+  },
+  "previewSeekFallback": {
+    "message": "Fallback seek",
+    "description": "Preview seek fallback option label"
+  },
+  "previewSeekFallbackHelp": {
+    "message": "Seek forward if no preview skip button appears.",
+    "description": "Preview seek fallback help text"
+  },
+  "fallbackSeekLength": {
+    "message": "Fallback seek duration",
+    "description": "Fallback seek length option label"
+  },
+  "fallbackSeekLengthHelp": {
+    "message": "How many seconds to jump during fallback seek.",
+    "description": "Fallback seek length help text"
+  },
+  "seconds": {
+    "message": "seconds",
+    "description": "Time unit suffix"
+  },
+  "language": {
+    "message": "Language",
+    "description": "Language selection label"
+  },
+  "languageHelp": {
+    "message": "Choose the language for the user interface.",
+    "description": "Language selection help text"
+  },
+  "skipDelay": {
+    "message": "Skip Delay",
+    "description": "Skip delay option label"
+  },
+  "skipDelayHelp": {
+    "message": "Delay before attempting to skip segments (seconds)",
+    "description": "Skip delay help text"
+  }
+}

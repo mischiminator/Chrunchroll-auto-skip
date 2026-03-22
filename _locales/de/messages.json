@@ -1,0 +1,98 @@
+{
+  "extName": {
+    "message": "Crunchyroll Auto Skip",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Überspringe automatisch Zusammenfassungen, Intros, Outros und Vorschauen auf Crunchyroll.",
+    "description": "Extension short description"
+  },
+  "extTitle": {
+    "message": "Überspringe Wiedergabesegmente automatisch.",
+    "description": "Extension popup title"
+  },
+  "masterSwitch": {
+    "message": "Hauptschalter",
+    "description": "Main toggle control label"
+  },
+  "masterSwitchHelp": {
+    "message": "Aktiviere oder deaktiviere alle Aktionen.",
+    "description": "Master switch help text"
+  },
+  "segmentControls": {
+    "message": "Segmentsteuerungen",
+    "description": "Section title for segment options"
+  },
+  "recaps": {
+    "message": "Zusammenfassungen",
+    "description": "Recap skip option label"
+  },
+  "recapsHelp": {
+    "message": "Überspringe Zusammenfassungen.",
+    "description": "Recap skip option help text"
+  },
+  "intros": {
+    "message": "Intros",
+    "description": "Intro skip option label"
+  },
+  "introsHelp": {
+    "message": "Überspringe Intros.",
+    "description": "Intro skip option help text"
+  },
+  "outros": {
+    "message": "Outros",
+    "description": "Outro skip option label"
+  },
+  "outrosHelp": {
+    "message": "Überspringe Enden und Abspanne.",
+    "description": "Outro skip option help text"
+  },
+  "previews": {
+    "message": "Vorschauen",
+    "description": "Preview skip option label"
+  },
+  "previewsHelp": {
+    "message": "Überspringe Vorschauen der nächsten Episode.",
+    "description": "Preview skip option help text"
+  },
+  "advanced": {
+    "message": "Erweitert",
+    "description": "Advanced settings section title"
+  },
+  "previewSeekFallback": {
+    "message": "Fallback-Suche für Vorschau",
+    "description": "Preview seek fallback option label"
+  },
+  "previewSeekFallbackHelp": {
+    "message": "Spule vor, wenn keine Schaltfläche zum Überspringen der Vorschau angezeigt wird.",
+    "description": "Preview seek fallback help text"
+  },
+  "fallbackSeekLength": {
+    "message": "Länge des Fallback-Suchens",
+    "description": "Fallback seek length option label"
+  },
+  "fallbackSeekLengthHelp": {
+    "message": "Wie weit der Player beim Fallback-Suchen vorspulen soll.",
+    "description": "Fallback seek length help text"
+  },
+  "seconds": {
+    "message": "Sekunden",
+    "description": "Time unit suffix"
+  },
+  "language": {
+    "message": "Sprache",
+    "description": "Language selection label"
+  },
+  "languageHelp": {
+    "message": "Wähle die Sprache der Benutzeroberfläche.",
+    "description": "Language selection help text"
+  },
+  "skipDelay": {
+    "message": "Überspring-Verzögerung",
+    "description": "Skip delay option label"
+  },
+  "skipDelayHelp": {
+    "message": "Verzögerung vor dem Versuch, Segmente zu überspringen (Sekunden)",
+    "description": "Skip delay help text"
+  }
+}

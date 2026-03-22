@@ -1,6 +1,6 @@
 # Crunchyroll Auto Skip Plus
 
-Manifest V3 Chrome extension that attempts to auto-skip the following on Crunchyroll:
+Chrome extension that attempts to auto-skip the following on Crunchyroll:
 
 - Recaps
 - Intros
@@ -14,16 +14,29 @@ Included features:
 - Preview seek fallback when no skip button appears
 - Adjustable fallback seek length
 - Debug logging option
-- Packaged icons
-- Polished popup UI
 
 ## Install
+
+### From Chrome Web Store
+
+Install from [Chrome Web Store](https://chromewebstore.google.com/detail/crunchyroll-auto-skip/aedaacijfoadiogdiehccepknbnhnecg)
+
+### Manual Installation
 
 1. Open `chrome://extensions`
 2. Enable **Developer mode**
 3. Click **Load unpacked**
 4. Select this folder
 5. Refresh the Crunchyroll tab
+
+## Supported Languages
+
+The extension supports multiple languages. The language is automatically detected based on your browser's language settings. Currently supported:
+
+- English (default)
+- Spanish (Español)
+- French (Français)
+- German (Deutsch)
 
 ## Notes
 

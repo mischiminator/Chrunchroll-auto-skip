@@ -198,3 +198,58 @@ input[type="number"]:disabled {
   line-height: 1.45;
   padding: 4px 2px 0;
 }
+
+.collapsible-header {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.collapsible-header:hover {
+  opacity: 0.8;
+}
+
+.toggle-icon {
+  display: inline-block;
+  font-size: 12px;
+  transition: transform 0.2s ease;
+  color: var(--muted);
+}
+
+.collapsible-content {
+  max-height: 500px;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  opacity: 1;
+}
+
+.collapsible-content.collapsed {
+  max-height: 0;
+  opacity: 0;
+}
+
+select {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 13px;
+  outline: none;
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+select:focus {
+  border-color: rgba(244,117,33,0.55);
+  box-shadow: 0 0 0 3px rgba(244,117,33,0.14);
+}
+
+select option {
+  background: var(--panel);
+  color: var(--text);
+}

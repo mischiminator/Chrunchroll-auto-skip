@@ -5,8 +5,9 @@
     skipIntros: true,
     skipOutros: true,
     skipPreviews: true,
+    previewSeekFallback: false,
     previewSeekSeconds: 90,
-    debug: true
+    skipDelay: 3
   };
 
   let settings = { ...DEFAULT_SETTINGS };
@@ -16,9 +17,7 @@
   let poller = null;
 
   function log(...args) {
-    if (settings.debug) {
-      console.log("[CR Auto Skip]", ...args);
-    }
+    console.log("[CR Auto Skip]", ...args);
   }
 
   function loadSettings() {
@@ -46,6 +45,15 @@
       style.opacity !== "0" &&
       style.pointerEvents !== "none"
     );
+  }
+
+  function safeClick(el) {
+    try {
+      el.click();
+      return true;
+    } catch (err) {
+      return false;
+    }
   }
 
   function getText(el) {
@@ -136,7 +144,11 @@
         continue;
       }
 
-      el.click();
+      if (!safeClick(el)) {
+        log("failed to click", { text, href: location.href, top: window === window.top });
+        continue;
+      }
+
       lastActionKey = key;
       lastActionAt = now;
       log("clicked", { type, text, href: location.href, top: window === window.top });
@@ -208,43 +220,58 @@
     return false;
   }
 
-  function tick() {
+  let pendingSkipTimer = null;
+
+  function doSkipAction() {
     try {
       if (clickSkipButton()) return;
       seekFallback();
     } catch (err) {
-      log("tick error", err);
+      log("skip error", err);
+    } finally {
+      pendingSkipTimer = null;
     }
   }
 
-  function start() {
-    log("started", {
-      href: location.href,
-      top: window === window.top,
-      hasVideo: !!document.querySelector("video")
-    });
+  function scheduleTick() {
+    const delaySec = Number(settings.skipDelay ?? DEFAULT_SETTINGS.skipDelay);
+    const delayMs = Math.max(0, Math.min(10, delaySec)) * 1000;
 
+    // if already scheduled, do nothing (debounce)
+    if (pendingSkipTimer !== null) return;
+
+    if (delayMs <= 0) {
+      doSkipAction();
+      return;
+    }
+
+    pendingSkipTimer = setTimeout(doSkipAction, delayMs);
+  }
+
+  function forceTick() {
+    // called by observer and interval
+    scheduleTick();
+  }
+
+  function start() {
+    log("started", { href: location.href });
     observer?.disconnect();
     if (poller) clearInterval(poller);
+    if (pendingSkipTimer) {
+      clearTimeout(pendingSkipTimer);
+      pendingSkipTimer = null;
+    }
 
-    observer = new MutationObserver(() => tick());
+    observer = new MutationObserver(forceTick);
     observer.observe(document.documentElement, {
       childList: true,
       subtree: true,
       attributes: true
     });
 
-    poller = setInterval(tick, 700);
-    tick();
+    poller = setInterval(forceTick, 700);
+    forceTick();
   }
-
-  chrome.storage.onChanged.addListener((changes, area) => {
-    if (area !== "sync") return;
-    for (const [key, val] of Object.entries(changes)) {
-      settings[key] = val.newValue;
-    }
-    log("settings updated", settings);
-  });
 
   loadSettings().then(start);
 })();
