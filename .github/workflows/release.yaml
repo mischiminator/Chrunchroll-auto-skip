@@ -14,7 +14,7 @@ env:
 
 jobs:
   release:
-    runs-on: [self-hosted, linux, x64]
+    runs-on: [self-hosted, linux, x64, macos-latest, arm64]
 
     steps:
       - name: Checkout repository
