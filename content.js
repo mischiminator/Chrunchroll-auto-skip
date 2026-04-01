@@ -250,17 +250,40 @@
 
   function forceTick() {
     // called by observer and interval
+    if (location.href !== currentUrl) {
+      currentUrl = location.href;
+      start();
+      return;
+    }
     scheduleTick();
   }
 
-  function start() {
-    log("started", { href: location.href });
-    observer?.disconnect();
-    if (poller) clearInterval(poller);
+  function stop() {
+    if (observer) {
+      observer.disconnect();
+      observer = null;
+    }
+
+    if (poller) {
+      clearInterval(poller);
+      poller = null;
+    }
+
     if (pendingSkipTimer) {
       clearTimeout(pendingSkipTimer);
       pendingSkipTimer = null;
     }
+  }
+
+  function start() {
+    if (!location.href.includes("watch")) {
+      log("start skipped, URL does not include watch", { href: location.href });
+      stop();
+      return;
+    }
+
+    log("started", { href: location.href });
+    stop();
 
     observer = new MutationObserver(forceTick);
     observer.observe(document.documentElement, {
@@ -273,5 +296,49 @@
     forceTick();
   }
 
+  function hookUrlChange(newUrl) {
+    // called on SPA navigation (history API / hashchange)
+    if (newUrl !== currentUrl) {
+      currentUrl = newUrl;
+      start();
+    }
+  }
+
+  let currentUrl = location.href;
+  let urlWatcherInterval = null;
+
+  function startUrlWatcher() {
+    if (urlWatcherInterval !== null) return;
+
+    urlWatcherInterval = setInterval(() => {
+      if (location.href !== currentUrl) {
+        currentUrl = location.href;
+        start();
+      }
+    }, 300);
+  }
+
+  function installLocationChangeHooks() {
+    const origPushState = window.history.pushState;
+    const origReplaceState = window.history.replaceState;
+
+    window.history.pushState = function (state, title, url) {
+      const result = origPushState.apply(this, arguments);
+      hookUrlChange(window.location.href);
+      return result;
+    };
+
+    window.history.replaceState = function (state, title, url) {
+      const result = origReplaceState.apply(this, arguments);
+      hookUrlChange(window.location.href);
+      return result;
+    };
+
+    window.addEventListener("popstate", () => hookUrlChange(window.location.href));
+    window.addEventListener("hashchange", () => hookUrlChange(window.location.href));
+  }
+
+  installLocationChangeHooks();
+  startUrlWatcher();
   loadSettings().then(start);
 })();
