@@ -59,14 +59,6 @@
     "message": "Advanced",
     "description": "Advanced settings section title"
   },
-  "previewSeekFallback": {
-    "message": "Fallback seek",
-    "description": "Preview seek fallback option label"
-  },
-  "previewSeekFallbackHelp": {
-    "message": "Seek forward if no preview skip button appears.",
-    "description": "Preview seek fallback help text"
-  },
   "fallbackSeekLength": {
     "message": "Fallback seek duration",
     "description": "Fallback seek length option label"

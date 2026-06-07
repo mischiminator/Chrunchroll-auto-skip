@@ -25,10 +25,6 @@ const translationMap = {
   
   // Advanced section
   "advanced": { selector: "#advancedToggle" },
-  "previewSeekFallback": { selector: "label[for='previewSeekFallback'] .label" },
-  "previewSeekFallbackHelp": { selector: "label[for='previewSeekFallback'] .help" },
-  "fallbackSeekLength": { selector: "label[for='previewSeekSeconds'] .label" },
-  "fallbackSeekLengthHelp": { selector: "label[for='previewSeekSeconds'] .help" },
   "seconds": { selector: ".suffix" },
   "language": { selector: "label[for='language'] .label" },
   "languageHelp": { selector: "label[for='language'] .help" },
@@ -72,8 +68,6 @@ const DEFAULT_SETTINGS = {
   skipIntros: true,
   skipOutros: true,
   skipPreviews: true,
-  previewSeekFallback: false,
-  previewSeekSeconds: 90,
   skipDelay: 3
 };
 
@@ -82,18 +76,11 @@ const TOGGLE_IDS = [
   "skipRecaps",
   "skipIntros",
   "skipOutros",
-  "skipPreviews",
-  "previewSeekFallback"
+  "skipPreviews"
 ];
 
 function getEl(id) {
   return document.getElementById(id);
-}
-
-function sanitizeSeekValue(value) {
-  const parsed = Number(value);
-  if (!Number.isFinite(parsed)) return DEFAULT_SETTINGS.previewSeekSeconds;
-  return Math.min(180, Math.max(15, Math.round(parsed)));
 }
 
 function sanitizeDelayValue(value) {
@@ -109,8 +96,6 @@ function applyDisabledState() {
     if (id === "enabled") continue;
     getEl(id).disabled = !master;
   }
-
-  getEl("previewSeekSeconds").disabled = !master || !getEl("previewSeekFallback").checked;
 }
 
 function savePartial(data) {
@@ -126,19 +111,20 @@ function bindToggles() {
     });
   }
 
-  const seekInput = getEl("previewSeekSeconds");
-
-  const commitSeekInput = () => {
-    const value = sanitizeSeekValue(seekInput.value);
-    seekInput.value = String(value);
-    savePartial({ previewSeekSeconds: value });
-  };
-
   seekInput.addEventListener("change", commitSeekInput);
   seekInput.addEventListener("blur", commitSeekInput);
 }
 
 function setupEventListeners() {
+  // Setup GitHub link
+  const githubLink = getEl("githubLink");
+  if (githubLink) {
+    githubLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      chrome.tabs.create({ url: githubLink.dataset.url });
+    });
+  }
+
   // Setup language dropdown
   const langSelect = getEl("language");
   if (langSelect) {

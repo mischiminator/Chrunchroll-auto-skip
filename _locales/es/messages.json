@@ -59,22 +59,6 @@
     "message": "Avanzado",
     "description": "Advanced settings section title"
   },
-  "previewSeekFallback": {
-    "message": "Búsqueda alternativa",
-    "description": "Preview seek fallback option label"
-  },
-  "previewSeekFallbackHelp": {
-    "message": "Avanza el reproductor si no aparece un botón para omitir la vista previa.",
-    "description": "Preview seek fallback help text"
-  },
-  "fallbackSeekLength": {
-    "message": "Duración de la búsqueda alternativa",
-    "description": "Fallback seek length option label"
-  },
-  "fallbackSeekLengthHelp": {
-    "message": "Cuántos segundos debe saltar el reproductor durante la búsqueda alternativa.",
-    "description": "Fallback seek length help text"
-  },
   "seconds": {
     "message": "segundos",
     "description": "Time unit suffix"

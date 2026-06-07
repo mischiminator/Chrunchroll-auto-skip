@@ -59,22 +59,6 @@
     "message": "Erweitert",
     "description": "Advanced settings section title"
   },
-  "previewSeekFallback": {
-    "message": "Fallback-Suche für Vorschau",
-    "description": "Preview seek fallback option label"
-  },
-  "previewSeekFallbackHelp": {
-    "message": "Spule vor, wenn keine Schaltfläche zum Überspringen der Vorschau angezeigt wird.",
-    "description": "Preview seek fallback help text"
-  },
-  "fallbackSeekLength": {
-    "message": "Länge des Fallback-Suchens",
-    "description": "Fallback seek length option label"
-  },
-  "fallbackSeekLengthHelp": {
-    "message": "Wie weit der Player beim Fallback-Suchen vorspulen soll.",
-    "description": "Fallback seek length help text"
-  },
   "seconds": {
     "message": "Sekunden",
     "description": "Time unit suffix"
