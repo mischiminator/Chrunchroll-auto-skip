@@ -59,22 +59,6 @@
     "message": "Avancé",
     "description": "Advanced settings section title"
   },
-  "previewSeekFallback": {
-    "message": "Recherche alternative",
-    "description": "Preview seek fallback option label"
-  },
-  "previewSeekFallbackHelp": {
-    "message": "Avance le lecteur s'il n'y a pas de bouton pour ignorer l'aperçu.",
-    "description": "Preview seek fallback help text"
-  },
-  "fallbackSeekLength": {
-    "message": "Durée de la recherche alternative",
-    "description": "Fallback seek length option label"
-  },
-  "fallbackSeekLengthHelp": {
-    "message": "Nombre de secondes à sauter lors de la recherche alternative.",
-    "description": "Fallback seek length help text"
-  },
   "seconds": {
     "message": "secondes",
     "description": "Time unit suffix"

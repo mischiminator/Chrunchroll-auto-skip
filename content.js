@@ -5,8 +5,6 @@
     skipIntros: true,
     skipOutros: true,
     skipPreviews: true,
-    previewSeekFallback: false,
-    previewSeekSeconds: 90,
     skipDelay: 3
   };
 
@@ -68,19 +66,28 @@
     ].filter(Boolean).join(" "));
   }
 
+  function containsAny(textToTest, testList) {
+    return testList.some(element => textToTest.includes(element));
+  }
+
   function classify(text) {
     const t = normalize(text);
 
-    if (settings.skipRecaps && (t.includes("recap") || t.includes("previously on"))) {
+    const aria_text_recap = ["recap", "zusammenfassung", "résumé", "resumen"]
+    const aria_text_intro = ["intro", "opening"];
+    const aria_text_outro = ["outro", "ending", "credits", "générique", "créditos"];
+    const aria_text_preview = ["preview", "vorschau", "avance", "aperçu"]
+
+    if (settings.skipRecaps && containsAny(t, aria_text_recap)) {
       return "recap";
     }
-    if (settings.skipIntros && (t.includes("skip intro") || t.includes("intro") || t.includes("opening"))) {
+    if (settings.skipIntros && containsAny(t, aria_text_intro)) {
       return "intro";
     }
-    if (settings.skipOutros && (t.includes("skip credits") || t.includes("credits") || t.includes("ending") || t.includes("outro"))) {
+    if (settings.skipOutros && containsAny(t, aria_text_outro)) {
       return "outro";
     }
-    if (settings.skipPreviews && (t.includes("preview") || t.includes("up next") || t.includes("next episode"))) {
+    if (settings.skipPreviews && containsAny(t, aria_text_preview)) {
       return "preview";
     }
 
@@ -192,60 +199,100 @@
     return normalize(text);
   }
 
-  function seekFallback() {
-    if (!settings.enabled) return false;
-
-    const video = getMainVideo();
-    if (!video || !isFinite(video.duration) || video.duration <= 0) return false;
-
-    const now = Date.now();
-    if (now - lastActionAt < 2500) return false;
-
-    const remaining = video.duration - video.currentTime;
-    const overlayText = collectOverlayText();
-
-    if (
-      settings.skipPreviews &&
-      remaining < Math.max(120, settings.previewSeekSeconds + 10) &&
-      (overlayText.includes("preview") || overlayText.includes("up next") || overlayText.includes("next episode"))
-    ) {
-      const from = video.currentTime;
-      video.currentTime = Math.min(video.duration - 1, video.currentTime + Number(settings.previewSeekSeconds || 90));
-      lastActionKey = `preview-seek:${Math.floor(from)}`;
-      lastActionAt = now;
-      log("seek preview", { from, to: video.currentTime, href: location.href });
-      return true;
-    }
-
-    return false;
-  }
 
   let pendingSkipTimer = null;
+  let pendingSkipKey = "";
 
-  function doSkipAction() {
-    try {
-      if (clickSkipButton()) return;
-      seekFallback();
-    } catch (err) {
-      log("skip error", err);
-    } finally {
-      pendingSkipTimer = null;
-    }
+  function getSkipDelayMs() {
+    const delaySec = Number(settings.skipDelay ?? DEFAULT_SETTINGS.skipDelay);
+    return Math.max(0, Math.min(10, delaySec)) * 1000;
   }
 
-  function scheduleTick() {
-    const delaySec = Number(settings.skipDelay ?? DEFAULT_SETTINGS.skipDelay);
-    const delayMs = Math.max(0, Math.min(10, delaySec)) * 1000;
+  function getButtonKey(el, text, type) {
+    const rect = el.getBoundingClientRect();
+    return `${type}:${Math.round(rect.x)}:${Math.round(rect.y)}:${text}`;
+  }
 
-    // if already scheduled, do nothing (debounce)
-    if (pendingSkipTimer !== null) return;
+  function shouldDelayType(type) {
+    return type === "intro" || type === "outro";
+  }
 
-    if (delayMs <= 0) {
-      doSkipAction();
-      return;
+  function clearPendingSkipTimer() {
+    if (pendingSkipTimer !== null) {
+      clearTimeout(pendingSkipTimer);
+      pendingSkipTimer = null;
+    }
+    pendingSkipKey = "";
+  }
+
+  function clickSpecificSkipButton(el, text, type, key) {
+    const now = Date.now();
+
+    if (key === lastActionKey && now - lastActionAt < 2500) {
+      return false;
     }
 
-    pendingSkipTimer = setTimeout(doSkipAction, delayMs);
+    if (!safeClick(el)) {
+      log("failed to click", { type, text, href: location.href, top: window === window.top });
+      return false;
+    }
+
+    lastActionKey = key;
+    lastActionAt = now;
+    log("clicked", { type, text, href: location.href, top: window === window.top });
+    return true;
+  }
+
+  function runSkipCheck() {
+    if (!settings.enabled) return false;
+
+    const buttons = findButtons();
+
+    if (!buttons.length) {
+      clearPendingSkipTimer();
+      return false;
+    }
+
+    const { el, text, type } = buttons[0];
+    const key = getButtonKey(el, text, type);
+
+    if (!shouldDelayType(type)) {
+      clearPendingSkipTimer();
+      return clickSpecificSkipButton(el, text, type, key);
+    }
+
+    const delayMs = getSkipDelayMs();
+
+    if (delayMs <= 0) {
+      clearPendingSkipTimer();
+      return clickSpecificSkipButton(el, text, type, key);
+    }
+
+    if (pendingSkipTimer !== null && pendingSkipKey === key) {
+      return false;
+    }
+
+    clearPendingSkipTimer();
+    pendingSkipKey = key;
+
+    pendingSkipTimer = setTimeout(() => {
+      pendingSkipTimer = null;
+
+      const stillVisible = findButtons().find(({ el: currentEl, text: currentText, type: currentType }) => {
+        return getButtonKey(currentEl, currentText, currentType) === key;
+      });
+
+      if (!stillVisible) {
+        pendingSkipKey = "";
+        return;
+      }
+
+      clickSpecificSkipButton(stillVisible.el, stillVisible.text, stillVisible.type, key);
+      pendingSkipKey = "";
+    }, delayMs);
+
+    log("scheduled delayed skip", { type, delayMs, text, href: location.href });
+    return false;
   }
 
   function forceTick() {
@@ -255,7 +302,12 @@
       start();
       return;
     }
-    scheduleTick();
+
+    try {
+      runSkipCheck();
+    } catch (err) {
+      log("skip error", err);
+    }
   }
 
   function stop() {
@@ -269,10 +321,7 @@
       poller = null;
     }
 
-    if (pendingSkipTimer) {
-      clearTimeout(pendingSkipTimer);
-      pendingSkipTimer = null;
-    }
+    clearPendingSkipTimer();
   }
 
   function start() {
