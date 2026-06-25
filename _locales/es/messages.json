@@ -79,12 +79,20 @@
     "message": "Retraso antes de intentar omitir segmentos (segundos)",
     "description": "Skip delay help text"
   },
+  "hotkey": {
+    "message": "Tecla para desactivar el salto",
+    "description": "Customizable hotkey label"
+  },
+  "hotkeyHelp": {
+    "message": "Presiona una sola tecla para desactivar el auto-salto del tipo de segmento actual.",
+    "description": "Customizable hotkey help text"
+  },
   "keyboardShortcut": {
-    "message": "Atajo de teclado (S)",
+    "message": "Atajo de teclado (D)",
     "description": "Keyboard shortcut feature label"
   },
   "keyboardShortcutHelp": {
-    "message": "Presiona 'S' para desactivar el auto-salto del tipo de segmento actual. El auto-salto se reanudará normalmente cuando termine el segmento.",
+    "message": "Presiona 'D' para desactivar el auto-salto del tipo de segmento actual. El auto-salto se reanudará normalmente cuando termine el segmento.",
     "description": "Keyboard shortcut help text"
   }
 }

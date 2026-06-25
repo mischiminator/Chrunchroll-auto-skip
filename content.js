@@ -5,7 +5,8 @@
     skipIntros: true,
     skipOutros: true,
     skipPreviews: true,
-    skipDelay: 3
+    skipDelay: 3,
+    disableSkipHotkey: "d"
   };
 
   let settings = { ...DEFAULT_SETTINGS };
@@ -28,6 +29,18 @@
       });
     });
   }
+
+  // Listen for settings changes and update in real-time
+  chrome.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName !== "sync") return;
+    
+    for (const [key, { newValue }] of Object.entries(changes)) {
+      if (key in DEFAULT_SETTINGS && newValue !== undefined) {
+        settings[key] = newValue;
+        log("setting updated", { key, value: newValue });
+      }
+    }
+  });
 
   function normalize(text) {
     return String(text || "").toLowerCase().replace(/\s+/g, " ").trim();
@@ -265,6 +278,7 @@
       currentActiveSkipType = type;
       if (ignoreCurrentSkipType !== type) {
         // Type changed from what we were ignoring, allow skipping again
+        ignoreCurrentSkipType = null;
       } else {
         // Different type now, but it matches what we want to ignore, keep ignoring
       }
@@ -409,7 +423,8 @@
 
   function installKeyboardShortcuts() {
     window.addEventListener("keydown", (e) => {
-      if ((e.key === "s" || e.key === "S") && !e.ctrlKey && !e.altKey && !e.metaKey) {
+      const hotkey = (settings.disableSkipHotkey || "d").toLowerCase();
+      if ((e.key === hotkey || e.key === hotkey.toUpperCase()) && !e.ctrlKey && !e.altKey && !e.metaKey) {
         const target = e.target;
         // Don't intercept if the user is typing in an input field
         if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.contentEditable === "true") {
@@ -422,7 +437,9 @@
           const { type } = buttons[0];
           ignoreCurrentSkipType = type;
           currentActiveSkipType = type;
-          log("keyboard shortcut: skip ignored until type changes", { ignoredType: type });
+          // Clear any pending skip timer to prevent scheduled skips
+          clearPendingSkipTimer();
+          log("keyboard shortcut: auto-skip disabled for type", { disabledType: type, hotkey });
         }
       }
     });

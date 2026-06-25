@@ -87,12 +87,20 @@
     "message": "Delay before attempting to skip segments (seconds)",
     "description": "Skip delay help text"
   },
+  "hotkey": {
+    "message": "Disable Skip Hotkey",
+    "description": "Customizable hotkey label"
+  },
+  "hotkeyHelp": {
+    "message": "Press a single key to disable auto-skip for the current segment type.",
+    "description": "Customizable hotkey help text"
+  },
   "keyboardShortcut": {
-    "message": "Keyboard Shortcut (S)",
+    "message": "Keyboard Shortcut (D)",
     "description": "Keyboard shortcut feature label"
   },
   "keyboardShortcutHelp": {
-    "message": "Press 'S' to disable auto-skip for the current segment type. Auto-skip will resume normally when the segment ends.",
+    "message": "Press 'D' to disable auto-skip for the current segment type. Auto-skip will resume normally when the segment ends.",
     "description": "Keyboard shortcut help text"
   }
 }

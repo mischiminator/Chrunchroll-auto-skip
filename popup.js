@@ -30,6 +30,8 @@ const translationMap = {
   "languageHelp": { selector: "label[for='language'] .help" },
   "skipDelay": { selector: "label[for='skipDelay'] .label" },
   "skipDelayHelp": { selector: "label[for='skipDelay'] .help" },
+  "hotkey": { selector: "label[for='hotkeyInput'] .label" },
+  "hotkeyHelp": { selector: "label[for='hotkeyInput'] .help" },
   "keyboardShortcut": { selector: ".info-box .label" },
   "keyboardShortcutHelp": { selector: ".info-box .help" }
 };
@@ -70,7 +72,8 @@ const DEFAULT_SETTINGS = {
   skipIntros: true,
   skipOutros: true,
   skipPreviews: true,
-  skipDelay: 3
+  skipDelay: 3,
+  disableSkipHotkey: "d"
 };
 
 const TOGGLE_IDS = [
@@ -112,9 +115,6 @@ function bindToggles() {
       applyDisabledState();
     });
   }
-
-  seekInput.addEventListener("change", commitSeekInput);
-  seekInput.addEventListener("blur", commitSeekInput);
 }
 
 function setupEventListeners() {
@@ -159,35 +159,67 @@ function setupEventListeners() {
       }
     }
 
-    const seekInput = getEl("previewSeekSeconds");
-    if (seekInput) {
-      seekInput.value = String(sanitizeSeekValue(settings.previewSeekSeconds));
-    }
-
     const skipDelayInput = getEl("skipDelay");
     if (skipDelayInput) {
       skipDelayInput.value = String(settings.skipDelay || 3);
       getEl("skipDelayValue").textContent = skipDelayInput.value;
-    }
-
-    bindToggles();
-    applyDisabledState();
-
-    if (skipDelayInput) {
+      
       const commitDelayInput = () => {
         const value = sanitizeDelayValue(skipDelayInput.value);
         skipDelayInput.value = String(value);
         savePartial({ skipDelay: value });
         getEl("skipDelayValue").textContent = String(value);
       };
+      
       skipDelayInput.addEventListener("change", commitDelayInput);
       skipDelayInput.addEventListener("blur", commitDelayInput);
       skipDelayInput.addEventListener("input", () => {
-        getEl("skipDelayValue").textContent = skipDelayInput.value;
-        // Save on input to ensure it's saved even if not released
-        const value = sanitizeDelayValue(skipDelayInput.value);
-        savePartial({ skipDelay: value });
+        const displayValue = skipDelayInput.value;
+        getEl("skipDelayValue").textContent = displayValue;
       });
+    }
+
+    const hotkeyInput = getEl("hotkeyInput");
+    if (hotkeyInput) {
+      hotkeyInput.value = (settings.disableSkipHotkey || "d").toUpperCase();
+      
+      const commitHotkey = () => {
+        let value = hotkeyInput.value.toLowerCase().trim();
+        if (!value || value.length === 0) {
+          value = "d";
+        } else {
+          value = value.charAt(0); // Take only first character
+        }
+        hotkeyInput.value = value.toUpperCase();
+        savePartial({ disableSkipHotkey: value });
+      };
+      
+      hotkeyInput.addEventListener("change", commitHotkey);
+      hotkeyInput.addEventListener("blur", commitHotkey);
+      hotkeyInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          commitHotkey();
+        }
+      });
+    }
+
+    bindToggles();
+    applyDisabledState();
+  });
+
+  // Listen for storage changes to update UI in real-time
+  chrome.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName !== "sync") return;
+    
+    for (const [key, { newValue }] of Object.entries(changes)) {
+      if (key === "skipDelay" && newValue !== undefined) {
+        const skipDelayInput = getEl("skipDelay");
+        if (skipDelayInput) {
+          skipDelayInput.value = String(newValue);
+          getEl("skipDelayValue").textContent = String(newValue);
+        }
+      }
     }
   });
 }
