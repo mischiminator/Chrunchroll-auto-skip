@@ -192,6 +192,23 @@ input[type="number"]:disabled {
   font-size: 12px;
 }
 
+.info-box {
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+
+.info-box .label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.info-box .help {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 3px;
+  line-height: 1.35;
+}
+
 .footer {
   color: var(--muted);
   font-size: 12px;

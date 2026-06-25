@@ -78,5 +78,13 @@
   "skipDelayHelp": {
     "message": "Délai avant d'essayer d'ignorer les segments (secondes)",
     "description": "Skip delay help text"
+  },
+  "keyboardShortcut": {
+    "message": "Raccourci clavier (S)",
+    "description": "Keyboard shortcut feature label"
+  },
+  "keyboardShortcutHelp": {
+    "message": "Appuyez sur 'S' pour désactiver l'auto-skip du type de segment actuel. L'auto-skip reprendra normalement lorsque le segment se terminera.",
+    "description": "Keyboard shortcut help text"
   }
 }
