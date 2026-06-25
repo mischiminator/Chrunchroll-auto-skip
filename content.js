@@ -13,6 +13,8 @@
   let lastActionKey = "";
   let observer = null;
   let poller = null;
+  let ignoreCurrentSkipType = null;
+  let currentActiveSkipType = null;
 
   function log(...args) {
     console.log("[CR Auto Skip]", ...args);
@@ -250,11 +252,29 @@
 
     if (!buttons.length) {
       clearPendingSkipTimer();
+      currentActiveSkipType = null;
+      ignoreCurrentSkipType = null;
       return false;
     }
 
     const { el, text, type } = buttons[0];
     const key = getButtonKey(el, text, type);
+
+    // If the skip type changed, reset the ignore flag
+    if (currentActiveSkipType !== type) {
+      currentActiveSkipType = type;
+      if (ignoreCurrentSkipType !== type) {
+        // Type changed from what we were ignoring, allow skipping again
+      } else {
+        // Different type now, but it matches what we want to ignore, keep ignoring
+      }
+    }
+
+    // Skip this type if it's currently ignored
+    if (ignoreCurrentSkipType === type) {
+      log("skipping manual skip for ignored type", { type, text });
+      return false;
+    }
 
     if (!shouldDelayType(type)) {
       clearPendingSkipTimer();
@@ -387,7 +407,29 @@
     window.addEventListener("hashchange", () => hookUrlChange(window.location.href));
   }
 
+  function installKeyboardShortcuts() {
+    window.addEventListener("keydown", (e) => {
+      if ((e.key === "s" || e.key === "S") && !e.ctrlKey && !e.altKey && !e.metaKey) {
+        const target = e.target;
+        // Don't intercept if the user is typing in an input field
+        if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.contentEditable === "true") {
+          return;
+        }
+        e.preventDefault();
+        
+        const buttons = findButtons();
+        if (buttons.length > 0) {
+          const { type } = buttons[0];
+          ignoreCurrentSkipType = type;
+          currentActiveSkipType = type;
+          log("keyboard shortcut: skip ignored until type changes", { ignoredType: type });
+        }
+      }
+    });
+  }
+
   installLocationChangeHooks();
+  installKeyboardShortcuts();
   startUrlWatcher();
   loadSettings().then(start);
 })();

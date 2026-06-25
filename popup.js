@@ -29,7 +29,9 @@ const translationMap = {
   "language": { selector: "label[for='language'] .label" },
   "languageHelp": { selector: "label[for='language'] .help" },
   "skipDelay": { selector: "label[for='skipDelay'] .label" },
-  "skipDelayHelp": { selector: "label[for='skipDelay'] .help" }
+  "skipDelayHelp": { selector: "label[for='skipDelay'] .help" },
+  "keyboardShortcut": { selector: ".info-box .label" },
+  "keyboardShortcutHelp": { selector: ".info-box .help" }
 };
 
 async function loadLanguage(lang) {

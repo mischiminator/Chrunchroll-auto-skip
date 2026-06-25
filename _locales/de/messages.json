@@ -78,5 +78,13 @@
   "skipDelayHelp": {
     "message": "Verzögerung vor dem Versuch, Segmente zu überspringen (Sekunden)",
     "description": "Skip delay help text"
+  },
+  "keyboardShortcut": {
+    "message": "Tastaturverknüpfung (S)",
+    "description": "Keyboard shortcut feature label"
+  },
+  "keyboardShortcutHelp": {
+    "message": "Drücke 'S', um den Auto-Skip für den aktuellen Segmenttyp zu deaktivieren. Der Auto-Skip wird wieder normal fortgesetzt, wenn das Segment endet.",
+    "description": "Keyboard shortcut help text"
   }
 }
