@@ -192,6 +192,29 @@ input[type="number"]:disabled {
   font-size: 12px;
 }
 
+input[type="text"] {
+  width: 100%;
+  max-width: 60px;
+  background: rgba(255,255,255,0.05);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  outline: none;
+}
+
+input[type="text"]:focus {
+  border-color: rgba(244,117,33,0.55);
+  box-shadow: 0 0 0 3px rgba(244,117,33,0.14);
+}
+
+input[type="text"]:disabled {
+  opacity: 0.45;
+}
+
 .info-box {
   padding: 10px 0;
   border-top: 1px solid var(--line);

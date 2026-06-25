@@ -79,12 +79,20 @@
     "message": "Délai avant d'essayer d'ignorer les segments (secondes)",
     "description": "Skip delay help text"
   },
+  "hotkey": {
+    "message": "Touche pour désactiver le saut",
+    "description": "Customizable hotkey label"
+  },
+  "hotkeyHelp": {
+    "message": "Appuyez sur une seule touche pour désactiver l'auto-skip du type de segment actuel.",
+    "description": "Customizable hotkey help text"
+  },
   "keyboardShortcut": {
-    "message": "Raccourci clavier (S)",
+    "message": "Raccourci clavier (D)",
     "description": "Keyboard shortcut feature label"
   },
   "keyboardShortcutHelp": {
-    "message": "Appuyez sur 'S' pour désactiver l'auto-skip du type de segment actuel. L'auto-skip reprendra normalement lorsque le segment se terminera.",
+    "message": "Appuyez sur 'D' pour désactiver l'auto-skip du type de segment actuel. L'auto-skip reprendra normalement lorsque le segment se terminera.",
     "description": "Keyboard shortcut help text"
   }
 }

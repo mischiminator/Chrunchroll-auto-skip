@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Crunchyroll Auto Skip",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Skip recaps, intros, outros and previews on Crunchyroll.",
   "default_locale": "en",
   "permissions": [
