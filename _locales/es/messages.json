@@ -76,7 +76,7 @@
     "description": "Skip delay option label"
   },
   "skipDelayHelp": {
-    "message": "Retraso antes de intentar omitir segmentos (segundos)",
+    "message": "Retraso antes de omitir intros y finales (segundos). Los resúmenes y avances se omiten sin retraso adicional.",
     "description": "Skip delay help text"
   },
   "hotkey": {
@@ -88,11 +88,11 @@
     "description": "Customizable hotkey help text"
   },
   "keyboardShortcut": {
-    "message": "Atajo de teclado (D)",
+    "message": "Atajo de teclado ({hotkey})",
     "description": "Keyboard shortcut feature label"
   },
   "keyboardShortcutHelp": {
-    "message": "Presiona 'D' para desactivar el auto-salto del tipo de segmento actual. El auto-salto se reanudará normalmente cuando termine el segmento.",
+    "message": "Presiona '{hotkey}' para desactivar el auto-salto del tipo de segmento actual. El auto-salto se reanudará normalmente cuando termine el segmento.",
     "description": "Keyboard shortcut help text"
   }
 }
