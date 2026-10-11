@@ -1,6 +1,7 @@
 // Language management
 let currentLanguage = "en";
 let translations = {};
+let currentHotkey = "d";
 
 // Map of element IDs to message keys for easy translation
 const translationMap = {
@@ -13,7 +14,7 @@ const translationMap = {
   "masterSwitchHelp": { selector: "label[for='enabled'] .help" },
   
   // Segment controls section
-  "segmentControls": { selector: ".section-title:nth-of-type(1)" },
+  "segmentControls": { selector: "#segmentControls" },
   "recaps": { selector: "label[for='skipRecaps'] .label" },
   "recapsHelp": { selector: "label[for='skipRecaps'] .help" },
   "intros": { selector: "label[for='skipIntros'] .label" },
@@ -24,7 +25,7 @@ const translationMap = {
   "previewsHelp": { selector: "label[for='skipPreviews'] .help" },
   
   // Advanced section
-  "advanced": { selector: "#advancedToggle" },
+  "advanced": { selector: "#advancedLabel" },
   "seconds": { selector: ".suffix" },
   "language": { selector: "label[for='language'] .label" },
   "languageHelp": { selector: "label[for='language'] .help" },
@@ -50,10 +51,16 @@ async function loadLanguage(lang) {
 }
 
 function getMessage(key) {
-  if (translations[currentLanguage]?.[key]?.message) {
-    return translations[currentLanguage][key].message;
+  const message = translations[currentLanguage]?.[key]?.message ||
+    chrome.i18n.getMessage(key) || `__MSG_${key}__`;
+  return message.replaceAll("{hotkey}", currentHotkey.toUpperCase());
+}
+
+function updateShortcutHelp(value) {
+  currentHotkey = String(value || DEFAULT_SETTINGS.disableSkipHotkey).toLowerCase().charAt(0);
+  for (const key of ["keyboardShortcut", "keyboardShortcutHelp"]) {
+    document.querySelector(translationMap[key].selector).textContent = getMessage(key);
   }
-  return chrome.i18n.getMessage(key) || `__MSG_${key}__`;
 }
 
 function translatePage() {
@@ -161,7 +168,7 @@ function setupEventListeners() {
 
     const skipDelayInput = getEl("skipDelay");
     if (skipDelayInput) {
-      skipDelayInput.value = String(settings.skipDelay || 3);
+      skipDelayInput.value = String(sanitizeDelayValue(settings.skipDelay ?? DEFAULT_SETTINGS.skipDelay));
       getEl("skipDelayValue").textContent = skipDelayInput.value;
       
       const commitDelayInput = () => {
@@ -181,7 +188,8 @@ function setupEventListeners() {
 
     const hotkeyInput = getEl("hotkeyInput");
     if (hotkeyInput) {
-      hotkeyInput.value = (settings.disableSkipHotkey || "d").toUpperCase();
+      updateShortcutHelp(settings.disableSkipHotkey);
+      hotkeyInput.value = currentHotkey.toUpperCase();
       
       const commitHotkey = () => {
         let value = hotkeyInput.value.toLowerCase().trim();
@@ -192,6 +200,7 @@ function setupEventListeners() {
         }
         hotkeyInput.value = value.toUpperCase();
         savePartial({ disableSkipHotkey: value });
+        updateShortcutHelp(value);
       };
       
       hotkeyInput.addEventListener("change", commitHotkey);
@@ -213,6 +222,10 @@ function setupEventListeners() {
     if (areaName !== "sync") return;
     
     for (const [key, { newValue }] of Object.entries(changes)) {
+      if (key === "disableSkipHotkey") {
+        updateShortcutHelp(newValue);
+        getEl("hotkeyInput").value = currentHotkey.toUpperCase();
+      }
       if (key === "skipDelay" && newValue !== undefined) {
         const skipDelayInput = getEl("skipDelay");
         if (skipDelayInput) {

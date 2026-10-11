@@ -35,11 +35,13 @@
     if (areaName !== "sync") return;
     
     for (const [key, { newValue }] of Object.entries(changes)) {
-      if (key in DEFAULT_SETTINGS && newValue !== undefined) {
-        settings[key] = newValue;
-        log("setting updated", { key, value: newValue });
+      if (key in DEFAULT_SETTINGS) {
+        settings[key] = newValue ?? DEFAULT_SETTINGS[key];
+        if (key === "enabled" || key.startsWith("skip")) clearPendingSkipTimer();
+        log("setting updated", { key, value: settings[key] });
       }
     }
+    if (!settings.enabled) clearPendingSkipTimer();
   });
 
   function normalize(text) {
@@ -48,6 +50,7 @@
 
   function isVisible(el) {
     if (!el || !(el instanceof Element)) return false;
+    if (el.matches(":disabled") || el.closest('[aria-disabled="true"], [inert]')) return false;
     const rect = el.getBoundingClientRect();
     const style = getComputedStyle(el);
     return (
@@ -120,6 +123,14 @@
     return roots;
   }
 
+  function hasSkipIntent(el) {
+    // Segment words alone (e.g. "Open preview details") are not skip actions.
+    const identifiers = ["data-testid", "data-t", "class"].map(name =>
+      (el.getAttribute(name) || "").replace(/([a-z])([A-Z])/g, "$1 $2")).join(" ");
+    const text = normalize(`${getText(el)} ${identifiers}`).replace(/[_-]+/g, " ");
+    return /(?:^|[^\p{L}\p{N}])(?:skip|überspringen|überspring|omitir|saltar|passer|ignorer)(?=$|[^\p{L}\p{N}])/u.test(text);
+  }
+
   function findButtons() {
     const selectors = [
       "button",
@@ -142,7 +153,7 @@
       }
 
       for (const el of els) {
-        if (!isVisible(el)) continue;
+        if (!isVisible(el) || !hasSkipIntent(el)) continue;
         const text = getText(el);
         const type = classify(text);
         if (!type) continue;
@@ -241,6 +252,9 @@
   }
 
   function clickSpecificSkipButton(el, text, type, key) {
+    if (!settings.enabled || ignoreCurrentSkipType === type || !el.isConnected ||
+        !isVisible(el) || !hasSkipIntent(el) || classify(getText(el)) !== type) return false;
+
     const now = Date.now();
 
     if (key === lastActionKey && now - lastActionAt < 2500) {
@@ -259,7 +273,10 @@
   }
 
   function runSkipCheck() {
-    if (!settings.enabled) return false;
+    if (!settings.enabled) {
+      clearPendingSkipTimer();
+      return false;
+    }
 
     const buttons = findButtons();
 
@@ -308,9 +325,14 @@
 
     clearPendingSkipTimer();
     pendingSkipKey = key;
+    const scheduledUrl = location.href;
 
     pendingSkipTimer = setTimeout(() => {
       pendingSkipTimer = null;
+      if (!settings.enabled || ignoreCurrentSkipType === type || location.href !== scheduledUrl) {
+        pendingSkipKey = "";
+        return;
+      }
 
       const stillVisible = findButtons().find(({ el: currentEl, text: currentText, type: currentType }) => {
         return getButtonKey(currentEl, currentText, currentType) === key;
@@ -356,11 +378,41 @@
     }
 
     clearPendingSkipTimer();
+    ignoreCurrentSkipType = null;
+    currentActiveSkipType = null;
+    lastActionKey = "";
+    lastActionAt = 0;
+  }
+
+  function isWatchUrl(url) {
+    try {
+      const parsed = new URL(url);
+      return ["www.crunchyroll.com", "crunchyroll.com"].includes(parsed.hostname) &&
+        /^\/(?:[a-z]{2}(?:-[a-z]{2})?\/)?watch(?:\/|$)/i.test(parsed.pathname);
+    } catch {
+      return false;
+    }
+  }
+
+  function isPlaybackContext() {
+    if (isWatchUrl(location.href)) return true;
+    if (window === window.top) return false;
+
+    // Embedded static players need not have a /watch route of their own.
+    if (location.origin === "https://static.crunchyroll.com") return true;
+    if (location.protocol !== "about:" && location.protocol !== "blob:") return false;
+    if (isWatchUrl(document.referrer)) return true;
+    try {
+      return isWatchUrl(window.top.location.href);
+    } catch {
+      // A cross-origin parent cannot be inspected; do not bypass that boundary.
+      return false;
+    }
   }
 
   function start() {
-    if (!location.href.includes("watch")) {
-      log("start skipped, URL does not include watch", { href: location.href });
+    if (!isPlaybackContext()) {
+      log("start skipped outside a playback context", { href: location.href });
       stop();
       return;
     }
@@ -423,17 +475,17 @@
 
   function installKeyboardShortcuts() {
     window.addEventListener("keydown", (e) => {
+      if (!settings.enabled) return;
       const hotkey = (settings.disableSkipHotkey || "d").toLowerCase();
       if ((e.key === hotkey || e.key === hotkey.toUpperCase()) && !e.ctrlKey && !e.altKey && !e.metaKey) {
-        const target = e.target;
-        // Don't intercept if the user is typing in an input field
-        if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.contentEditable === "true") {
+        // Check inherited editability and original targets inside shadow roots.
+        if (e.composedPath().some(target => target instanceof Element &&
+            (target.isContentEditable || target.matches("input, textarea, select")))) {
           return;
         }
-        e.preventDefault();
-        
         const buttons = findButtons();
         if (buttons.length > 0) {
+          e.preventDefault();
           const { type } = buttons[0];
           ignoreCurrentSkipType = type;
           currentActiveSkipType = type;
