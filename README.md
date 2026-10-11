@@ -49,6 +49,7 @@ The shortcut is not a global pause. If skipping is immediate, it may happen befo
 - The extension looks for both a segment label and a skip action, rather than treating every mention of an intro or preview as a skip button.
 - It handles supported embedded Crunchyroll players as well as controls on watch pages. Changes to the site can still affect compatibility.
 - Turning automatic skipping off cancels the pending countdown. Changing a skip setting restarts any pending countdown with the current settings.
+- When the player reports that a skip is still in progress, the extension waits before clicking another skip button, including an ending followed immediately by a preview.
 - Zero seconds means no added delay, and the popup preserves that value. Shortcut instructions reflect your chosen key.
 - The shortcut doesn't act while automatic skipping is off or no eligible control is present, and it ignores typing in editable fields.
 

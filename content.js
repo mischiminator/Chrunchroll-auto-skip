@@ -192,7 +192,7 @@
   }
 
   function getMainVideo() {
-    const videos = [...document.querySelectorAll("video")];
+    const videos = findRoots(document).flatMap(root => [...root.querySelectorAll("video")]);
     if (!videos.length) return null;
 
     videos.sort((a, b) => {
@@ -254,6 +254,11 @@
   function clickSpecificSkipButton(el, text, type, key) {
     if (!settings.enabled || ignoreCurrentSkipType === type || !el.isConnected ||
         !isVisible(el) || !hasSkipIntent(el) || classify(getText(el)) !== type) return false;
+
+    // An outro click can expose the preview control before the native seek ends.
+    // Do not issue a second skip while that first player transition is in flight.
+    const video = getMainVideo();
+    if (video?.seeking) return false;
 
     const now = Date.now();
 
