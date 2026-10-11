@@ -11,7 +11,7 @@ Keep changes focused on the requested task. Do not introduce a framework, build 
 - `manifest.json`: extension metadata, permissions, popup entry point, and content-script injection rules.
 - `content.js`: skip-control discovery, text classification, visibility checks, delayed skips, keyboard override, settings updates, and SPA navigation handling. It runs in matching frames and scans accessible shadow roots.
 - `popup.html`, `popup.css`, `popup.js`: settings UI, persistence, and translation loading.
-- `_locales/{en,de,es,fr}/messages.json`: translations for English, German, Spanish, and French.
+- `_locales/{en,de,es,fr,pt_BR}/messages.json`: translations for English, German, Spanish, French, and Portuguese (Brazil).
 - `icons/`: extension icons.
 - `README.md`: installation and user-facing documentation.
 - `.github/workflows/release.yaml`: self-hosted release job that tags and archives the repository.
@@ -26,7 +26,7 @@ Keep changes focused on the requested task. Do not introduce a framework, build 
 - Preserve keyboard behavior in editable fields and avoid interfering with modified shortcuts.
 - Treat Crunchyroll selectors and localized labels as unstable. Avoid clicking unrelated controls, duplicate clicks, unnecessary full-DOM scans, and leaked observers or timers.
 - Preserve frame, shadow-root, and SPA navigation support when changing player logic.
-- Keep popup IDs, JavaScript selectors, and translation keys consistent. Update all four locales when introducing user-facing text; do not leave raw translation placeholders.
+- Keep popup IDs, JavaScript selectors, and translation keys consistent. Update all locale files when introducing user-facing text; do not leave raw translation placeholders.
 - Keep Manifest V3 compatibility. Do not add remote executable code, secrets, telemetry, or broader host/API permissions without explicit approval.
 - Do not bump the manifest version for documentation-only changes. Ask before publishing a release or changing release automation.
 
@@ -51,7 +51,7 @@ These are syntax/JSON/whitespace checks, not proof of working browser behavior. 
 4. For timing changes, test zero and nonzero delay, disappearing/replaced controls, disabling a pending skip, and the keyboard override while a skip is pending.
 5. Verify that the override does not capture typing in editable fields and that skipping resumes after the segment ends.
 6. Navigate between episodes without a full reload; check for stale timers, duplicate clicks, and observers that do not restart or stop correctly.
-7. For UI/localization changes, check English, German, Spanish, and French, including switching the popup language.
+7. For UI/localization changes, check English, German, Spanish, French, and Portuguese (Brazil), including switching the popup language.
 
 If authenticated Crunchyroll playback is unavailable, report that limitation explicitly. Never claim live-player tests passed based only on static checks or mocked DOM tests.
 

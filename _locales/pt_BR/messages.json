@@ -1,0 +1,98 @@
+{
+  "extName": {
+    "message": "Crunchyroll Auto Skip",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Pule recapitulações, introduções, créditos e prévias no Crunchyroll.",
+    "description": "Extension short description"
+  },
+  "extTitle": {
+    "message": "Pule segmentos do vídeo automaticamente.",
+    "description": "Extension popup title"
+  },
+  "masterSwitch": {
+    "message": "Ativar extensão",
+    "description": "Main toggle control label"
+  },
+  "masterSwitchHelp": {
+    "message": "Ative ou desative todos os pulos automáticos.",
+    "description": "Master switch help text"
+  },
+  "segmentControls": {
+    "message": "Segmentos",
+    "description": "Section title for segment options"
+  },
+  "recaps": {
+    "message": "Recapitulações",
+    "description": "Recap skip option label"
+  },
+  "recapsHelp": {
+    "message": "Clique automaticamente nos botões para pular recapitulações, quando disponíveis.",
+    "description": "Recap skip option help text"
+  },
+  "intros": {
+    "message": "Introduções",
+    "description": "Intro skip option label"
+  },
+  "introsHelp": {
+    "message": "Pule as sequências de abertura.",
+    "description": "Intro skip option help text"
+  },
+  "outros": {
+    "message": "Encerramentos",
+    "description": "Outro skip option label"
+  },
+  "outrosHelp": {
+    "message": "Pule os encerramentos e os créditos.",
+    "description": "Outro skip option help text"
+  },
+  "previews": {
+    "message": "Prévias",
+    "description": "Preview skip option label"
+  },
+  "previewsHelp": {
+    "message": "Pule as prévias do próximo episódio.",
+    "description": "Preview skip option help text"
+  },
+  "advanced": {
+    "message": "Avançado",
+    "description": "Advanced settings section title"
+  },
+  "seconds": {
+    "message": "segundos",
+    "description": "Time unit suffix"
+  },
+  "language": {
+    "message": "Idioma",
+    "description": "Language selection label"
+  },
+  "languageHelp": {
+    "message": "Escolha o idioma da interface.",
+    "description": "Language selection help text"
+  },
+  "skipDelay": {
+    "message": "Tempo de espera",
+    "description": "Skip delay option label"
+  },
+  "skipDelayHelp": {
+    "message": "Tempo de espera antes de pular introduções e encerramentos (segundos). Recapitulações e prévias são puladas sem espera adicional.",
+    "description": "Skip delay help text"
+  },
+  "hotkey": {
+    "message": "Tecla para desativar o pulo",
+    "description": "Customizable hotkey label"
+  },
+  "hotkeyHelp": {
+    "message": "Pressione uma única tecla para desativar o pulo automático do tipo de segmento atual.",
+    "description": "Customizable hotkey help text"
+  },
+  "keyboardShortcut": {
+    "message": "Atalho de teclado ({hotkey})",
+    "description": "Keyboard shortcut feature label"
+  },
+  "keyboardShortcutHelp": {
+    "message": "Pressione '{hotkey}' para desativar o pulo automático do tipo de segmento atual. O pulo automático será retomado quando o segmento terminar.",
+    "description": "Keyboard shortcut help text"
+  }
+}
