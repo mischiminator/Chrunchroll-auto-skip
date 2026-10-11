@@ -76,7 +76,7 @@
     "description": "Skip delay option label"
   },
   "skipDelayHelp": {
-    "message": "Verzögerung vor dem Versuch, Segmente zu überspringen (Sekunden)",
+    "message": "Verzögerung vor dem Überspringen von Intros und Abspannen (Sekunden). Zusammenfassungen und Vorschauen werden ohne zusätzliche Verzögerung übersprungen.",
     "description": "Skip delay help text"
   },
   "hotkey": {
@@ -88,11 +88,11 @@
     "description": "Customizable hotkey help text"
   },
   "keyboardShortcut": {
-    "message": "Tastaturverknüpfung (D)",
+    "message": "Tastaturverknüpfung ({hotkey})",
     "description": "Keyboard shortcut feature label"
   },
   "keyboardShortcutHelp": {
-    "message": "Drücke 'D', um den Auto-Skip für den aktuellen Segmenttyp zu deaktivieren. Der Auto-Skip wird wieder normal fortgesetzt, wenn das Segment endet.",
+    "message": "Drücke '{hotkey}', um den Auto-Skip für den aktuellen Segmenttyp zu deaktivieren. Der Auto-Skip wird wieder normal fortgesetzt, wenn das Segment endet.",
     "description": "Keyboard shortcut help text"
   }
 }
