@@ -27,7 +27,7 @@ Crunchyroll Auto Skip automatically clicks available skip buttons, so you don't 
 
 ### Getting started
 
-Install the extension, refresh your Crunchyroll tab, and start watching. Open the extension popup whenever you want to change your preferences.
+Install the extension, refresh your Crunchyroll tab, and start watching. Open the extension popup to choose which sections to skip. Under Advanced, you can change the delay, shortcut key and popup language.
 
 ### A few things to know
 
@@ -37,5 +37,8 @@ The shortcut only takes effect while a skip button is showing and before the ski
 
 This is an independent extension and is not affiliated with or endorsed by Crunchyroll.
 
-For support and known issues, visit:
+### Help and feedback
+
+Questions, suggestions or something not working? Click GitHub at the bottom of the extension popup to open the project's support page in a new tab. You can find the source code and report problems there.
+
 https://github.com/mischiminator/Chrunchroll-auto-skip
