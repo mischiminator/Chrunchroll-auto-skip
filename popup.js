@@ -125,15 +125,6 @@ function bindToggles() {
 }
 
 function setupEventListeners() {
-  // Setup GitHub link
-  const githubLink = getEl("githubLink");
-  if (githubLink) {
-    githubLink.addEventListener("click", (e) => {
-      e.preventDefault();
-      chrome.tabs.create({ url: githubLink.dataset.url });
-    });
-  }
-
   // Setup language dropdown
   const langSelect = getEl("language");
   if (langSelect) {
