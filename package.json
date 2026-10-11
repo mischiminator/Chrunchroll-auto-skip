@@ -1,0 +1,11 @@
+{
+  "name": "crunchyroll-auto-skip-validation",
+  "private": true,
+  "scripts": {
+    "test": "node tests/functional.mjs",
+    "test:install-browser": "playwright install chromium"
+  },
+  "devDependencies": {
+    "playwright": "1.64.0"
+  }
+}

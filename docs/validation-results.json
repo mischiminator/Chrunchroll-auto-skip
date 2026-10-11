@@ -1,0 +1,307 @@
+{
+  "browser": "156.0.8078.4",
+  "scope": "Actual unpacked extension; real Chromium DOM and extension APIs; routed player fixtures, not live playback",
+  "passed": 62,
+  "failed": 10,
+  "total": 72,
+  "results": [
+    {
+      "name": "Manifest V3 loads without install warnings",
+      "status": "PASS"
+    },
+    {
+      "name": "Recognizes en: Skip Recap",
+      "status": "PASS"
+    },
+    {
+      "name": "Recognizes en: Skip Intro",
+      "status": "PASS"
+    },
+    {
+      "name": "Recognizes en: Skip Credits",
+      "status": "PASS"
+    },
+    {
+      "name": "Recognizes en: Skip Preview",
+      "status": "PASS"
+    },
+    {
+      "name": "Recognizes de: Zusammenfassung überspringen",
+      "status": "PASS"
+    },
+    {
+      "name": "Recognizes de: Intro überspringen",
+      "status": "PASS"
+    },
+    {
+      "name": "Recognizes de: Ending überspringen",
+      "status": "PASS"
+    },
+    {
+      "name": "Recognizes de: Vorschau überspringen",
+      "status": "PASS"
+    },
+    {
+      "name": "Recognizes es: Omitir resumen",
+      "status": "PASS"
+    },
+    {
+      "name": "Recognizes es: Omitir intro",
+      "status": "PASS"
+    },
+    {
+      "name": "Recognizes es: Omitir créditos",
+      "status": "PASS"
+    },
+    {
+      "name": "Recognizes es: Omitir avance",
+      "status": "PASS"
+    },
+    {
+      "name": "Recognizes fr: Passer le résumé",
+      "status": "PASS"
+    },
+    {
+      "name": "Recognizes fr: Passer intro",
+      "status": "PASS"
+    },
+    {
+      "name": "Recognizes fr: Passer le générique",
+      "status": "PASS"
+    },
+    {
+      "name": "Recognizes fr: Passer aperçu",
+      "status": "PASS"
+    },
+    {
+      "name": "skipRecaps=false prevents clicking",
+      "status": "PASS"
+    },
+    {
+      "name": "skipIntros=false prevents clicking",
+      "status": "PASS"
+    },
+    {
+      "name": "skipOutros=false prevents clicking",
+      "status": "PASS"
+    },
+    {
+      "name": "skipPreviews=false prevents clicking",
+      "status": "PASS"
+    },
+    {
+      "name": "Master off prevents new skips",
+      "status": "PASS"
+    },
+    {
+      "name": "Hidden/unavailable control ignored: display:none",
+      "status": "PASS"
+    },
+    {
+      "name": "Hidden/unavailable control ignored: visibility:hidden",
+      "status": "PASS"
+    },
+    {
+      "name": "Hidden/unavailable control ignored: opacity:0",
+      "status": "PASS"
+    },
+    {
+      "name": "Hidden/unavailable control ignored: pointer-events:none",
+      "status": "PASS"
+    },
+    {
+      "name": "ARIA-labelled role button recognized",
+      "status": "PASS"
+    },
+    {
+      "name": "Accessible shadow-root control recognized",
+      "status": "PASS"
+    },
+    {
+      "name": "Skip Intro respects nonzero delay",
+      "status": "PASS"
+    },
+    {
+      "name": "Skip Credits respects nonzero delay",
+      "status": "PASS"
+    },
+    {
+      "name": "Skip Recap ignores intro/outro delay",
+      "status": "PASS"
+    },
+    {
+      "name": "Skip Preview ignores intro/outro delay",
+      "status": "PASS"
+    },
+    {
+      "name": "Detached delayed control is not clicked",
+      "status": "PASS"
+    },
+    {
+      "name": "Master off cancels an already pending skip",
+      "status": "FAIL",
+      "error": "Expected values to be strictly equal:\n\n1 !== 0\n"
+    },
+    {
+      "name": "Segment off cancels an already pending skip",
+      "status": "PASS"
+    },
+    {
+      "name": "Hotkey cancels pending intro skip",
+      "status": "PASS"
+    },
+    {
+      "name": "Customized hotkey cancels pending skip",
+      "status": "PASS"
+    },
+    {
+      "name": "Hotkey ignored in input",
+      "status": "PASS"
+    },
+    {
+      "name": "Hotkey ignored in textarea",
+      "status": "PASS"
+    },
+    {
+      "name": "Hotkey ignored in contenteditable",
+      "status": "PASS"
+    },
+    {
+      "name": "Modified hotkey does not cancel skip",
+      "status": "PASS"
+    },
+    {
+      "name": "Hotkey suppression resets when control disappears",
+      "status": "PASS"
+    },
+    {
+      "name": "Same control is throttled for 2.5 seconds",
+      "status": "PASS"
+    },
+    {
+      "name": "Stored setting changes reach an open player",
+      "status": "PASS"
+    },
+    {
+      "name": "SPA navigation from home to watch starts skipping",
+      "status": "PASS"
+    },
+    {
+      "name": "SPA navigation away cancels pending timer",
+      "status": "PASS"
+    },
+    {
+      "name": "SPA episode change resets hotkey suppression",
+      "status": "FAIL",
+      "error": "page.waitForFunction: Timeout 2400ms exceeded."
+    },
+    {
+      "name": "Unrelated preview-labelled control is not clicked",
+      "status": "FAIL",
+      "error": "Expected values to be strictly equal:\n\n1 !== 0\n"
+    },
+    {
+      "name": "Plain preview text does not seek the video",
+      "status": "PASS"
+    },
+    {
+      "name": "Static player frame without watch in URL can skip",
+      "status": "FAIL",
+      "error": "frame.waitForFunction: Timeout 1500ms exceeded."
+    },
+    {
+      "name": "Matched static frame with watch in URL skips",
+      "status": "PASS"
+    },
+    {
+      "name": "Non-Crunchyroll pages do not run skip logic",
+      "status": "PASS"
+    },
+    {
+      "name": "Popup master switch disables segment controls and persists",
+      "status": "PASS"
+    },
+    {
+      "name": "Popup advanced section opens and closes without errors",
+      "status": "FAIL",
+      "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   \"Cannot set properties of null (setting 'textContent')\",\n+   \"Cannot set properties of null (setting 'textContent')\"\n+ ]\n- []\n"
+    },
+    {
+      "name": "Popup en translates every mapped element",
+      "status": "PASS"
+    },
+    {
+      "name": "Popup de translates every mapped element",
+      "status": "PASS"
+    },
+    {
+      "name": "Popup es translates every mapped element",
+      "status": "PASS"
+    },
+    {
+      "name": "Popup fr translates every mapped element",
+      "status": "PASS"
+    },
+    {
+      "name": "Popup language selection persists across reload",
+      "status": "PASS"
+    },
+    {
+      "name": "Popup preserves a saved zero-second delay",
+      "status": "FAIL",
+      "error": "Expected values to be strictly equal:\n\n'3' !== '0'\n"
+    },
+    {
+      "name": "Popup delay slider persists chosen value",
+      "status": "PASS"
+    },
+    {
+      "name": "Popup custom hotkey is persisted lowercase",
+      "status": "PASS"
+    },
+    {
+      "name": "Popup shortcut help reflects customized hotkey",
+      "status": "FAIL",
+      "error": "The input did not match the regular expression /['\"]X['\"]|['\"]x['\"]/. Input:\n\n\"Press 'D' to disable auto-skip for the current segment type. Auto-skip will resume normally when the segment ends.\"\n"
+    },
+    {
+      "name": "Nested editable descendant does not trigger hotkey override",
+      "status": "FAIL",
+      "error": "page.waitForFunction: Timeout 2500ms exceeded."
+    },
+    {
+      "name": "About:blank child frame can skip inherited-host controls",
+      "status": "FAIL",
+      "error": "frame.waitForFunction: Timeout 1500ms exceeded."
+    },
+    {
+      "name": "Visible control is recognized after initially being hidden",
+      "status": "PASS"
+    },
+    {
+      "name": "Uppercase hotkey cancels pending skip",
+      "status": "PASS"
+    },
+    {
+      "name": "Locale files share the same translation keys",
+      "status": "FAIL",
+      "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'advanced',\n    'extDescription',\n    'extName',\n    'extTitle',\n-   'fallbackSeekLength',\n-   'fallbackSeekLengthHelp',\n    'hotkey',\n    'hotkeyHelp',\n    'intros',\n    'introsHelp',\n    'keyboardShortcut',\n"
+    },
+    {
+      "name": "Popup segment switches all persist and reload",
+      "status": "PASS"
+    },
+    {
+      "name": "SPA replaceState starts player",
+      "status": "PASS"
+    },
+    {
+      "name": "Empty storage loads default toggles, delay and hotkey",
+      "status": "PASS"
+    },
+    {
+      "name": "Popup repository link opens the correct GitHub URL",
+      "status": "PASS"
+    }
+  ]
+}
