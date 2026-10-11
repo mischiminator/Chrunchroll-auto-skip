@@ -59,7 +59,8 @@ If authenticated Crunchyroll playback is unavailable, report that limitation exp
 
 - Skipping relies on available player controls. No preview seek fallback or debug toggle is implemented; do not promise timestamp detection or seeking without implementing and verifying it.
 - The default branch is currently `master`, while the release workflow's push trigger targets `main`. Do not fix this incidentally, dispatch the workflow, or create release tags as part of an unrelated task.
-- The release ZIP is produced with `git archive HEAD`, so tracked documentation is included in that archive.
+- The release ZIP uses an explicit runtime allowlist: `manifest.json`, `content.js`, `popup.html`, `popup.js`, `popup.css`, `icons/`, and `_locales/`. Documentation and workflow files are excluded. Update this list if a new runtime dependency is added.
+- Release notes require full Git history and use every commit since the previous published GitHub release, not simply the nearest tag. `CHANGELOG.md` is both the release body and a separate asset, never part of the extension ZIP. Test workflow shell steps only in isolated local clones with a local bare remote; do not dispatch publication to validate them.
 
 ## Git workflow and handoff
 

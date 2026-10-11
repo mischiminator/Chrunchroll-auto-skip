@@ -239,6 +239,23 @@ input[type="text"]:disabled {
   padding: 4px 2px 0;
 }
 
+.footer a {
+  color: var(--accent-2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.footer a:hover {
+  color: var(--text);
+}
+
+.footer a:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
 .collapsible-header {
   cursor: pointer;
   user-select: none;
