@@ -61,6 +61,14 @@ There is no timestamp detection, preview seek fallback or debug switch. Existing
 
 The extension uses storage to save preferences and access to Crunchyroll pages to find and click controls. Current source contains no analytics or extension-operated backend. Chrome may sync preferences through its own service. Diagnostic console messages can include page URLs, button text and changed settings.
 
+## Support and source code
+
+Use the **GitHub** link at the bottom of the extension popup to open this repository in a new tab. You can also reach it with **Tab** and open it with **Enter**.
+
+Found a problem or have a suggestion? [Open an issue](https://github.com/mischiminator/Chrunchroll-auto-skip/issues). For skipping problems, include the affected segment, your extension version and settings, and the skip button's wording. Do not include passwords or other private account information.
+
+This is an independent extension and is not affiliated with or endorsed by Crunchyroll.
+
 ## Store listing copy
 
 The proposed user-facing description is in [docs/CHROME_WEB_STORE.md](docs/CHROME_WEB_STORE.md).
