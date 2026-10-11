@@ -9,6 +9,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: extension-release
+  cancel-in-progress: false
+
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -19,6 +23,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
 
       - name: Generate tag
         id: tag
@@ -26,24 +33,114 @@ jobs:
           TAG="v$(date +'%Y.%m.%d')-${GITHUB_RUN_NUMBER}"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
-      - name: Create and push tag
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git tag "${{ steps.tag.outputs.tag }}"
-          git push origin "${{ steps.tag.outputs.tag }}"
-
       - name: Create release zip
         run: |
           mkdir -p dist
           git archive --format=zip \
             --output="dist/project-${{ steps.tag.outputs.tag }}.zip" \
-            HEAD
+            HEAD -- manifest.json content.js popup.html popup.js popup.css icons _locales
+
+      - name: Generate complete changelog
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ steps.tag.outputs.tag }}
+        run: |
+          python3 - <<'PY'
+          import html
+          import json
+          import os
+          import re
+          import subprocess
+          from pathlib import Path
+          from urllib.parse import quote
+          from urllib.request import Request, urlopen
+
+          def git(*args):
+              return subprocess.check_output(["git", *args], text=True).strip()
+
+          if git("rev-parse", "--is-shallow-repository") != "false":
+              raise SystemExit("Complete release notes require the full Git history.")
+
+          repository = os.environ["GITHUB_REPOSITORY"]
+          tag = os.environ["RELEASE_TAG"]
+          api = os.environ["GITHUB_API_URL"].rstrip("/")
+          web = os.environ["GITHUB_SERVER_URL"].rstrip("/") + "/" + repository
+          releases = []
+          page = 1
+          while True:
+              request = Request(
+                  f"{api}/repos/{repository}/releases?per_page=100&page={page}",
+                  headers={
+                      "Authorization": "Bearer " + os.environ["GH_TOKEN"],
+                      "Accept": "application/vnd.github+json",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                      "User-Agent": "crunchyroll-auto-skip-release",
+                  },
+              )
+              with urlopen(request, timeout=30) as response:
+                  batch = json.load(response)
+              releases.extend(
+                  release for release in batch
+                  if not release["draft"] and release["tag_name"] != tag
+              )
+              if len(batch) < 100:
+                  break
+              page += 1
+
+          previous = max(releases, key=lambda release: release["published_at"], default=None)
+          revision = "HEAD"
+          lines = [f"# Changelog — {tag}", ""]
+          if previous:
+              previous_tag = previous["tag_name"]
+              previous_commit = git("rev-parse", "--verify", f"refs/tags/{previous_tag}^{{commit}}")
+              if subprocess.run(["git", "merge-base", "--is-ancestor", previous_commit, "HEAD"]).returncode != 0:
+                  raise SystemExit("The previous published release is not an ancestor of HEAD; refusing incomplete notes.")
+              revision = previous_commit + "..HEAD"
+              compare = web + "/compare/" + quote(previous_tag, safe="") + "..." + quote(tag, safe="")
+              lines.extend([f"Changes since `{previous_tag}`. [Full comparison]({compare})", ""])
+          else:
+              lines.extend(["First release: complete repository history.", ""])
+
+          commits = git("log", "--reverse", "--topo-order", "--format=%H", revision).splitlines()
+          lines.extend([f"## Changes ({len(commits)} commits)", ""])
+          if not commits:
+              lines.extend(["No new commits since the previous published release.", ""])
+          for commit in commits:
+              author = html.escape(git("show", "-s", "--format=%an", commit))
+              message = git("show", "-s", "--format=%B", commit)
+              fence = "`" * max(3, max((len(match) + 1 for match in re.findall(r"`+", message)), default=3))
+              lines.extend([
+                  f"### [{commit[:12]}]({web}/commit/{commit}) — {author}", "",
+                  fence + "text", message, fence, "",
+              ])
+
+          changelog = "\n".join(lines) + "\n"
+          if len(changelog) > 125000:
+              raise SystemExit("Complete changelog exceeds the GitHub release body limit; refusing to truncate it.")
+          Path("dist").mkdir(exist_ok=True)
+          Path("dist/CHANGELOG.md").write_text(changelog, encoding="utf-8")
+          print(f"Generated complete release notes for {len(commits)} commits.")
+          PY
+
+      - name: Create and push tag
+        env:
+          RELEASE_TAG: ${{ steps.tag.outputs.tag }}
+        run: |
+          if git show-ref --verify --quiet "refs/tags/$RELEASE_TAG"; then
+            test "$(git rev-parse "refs/tags/$RELEASE_TAG^{commit}")" = "$(git rev-parse HEAD)"
+          else
+            git tag "$RELEASE_TAG"
+          fi
+          git push origin "refs/tags/$RELEASE_TAG"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.tag.outputs.tag }}
-          files: dist/project-${{ steps.tag.outputs.tag }}.zip
+          body_path: dist/CHANGELOG.md
+          fail_on_unmatched_files: true
+          files: |
+            dist/project-${{ steps.tag.outputs.tag }}.zip
+            dist/CHANGELOG.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
