@@ -59,14 +59,6 @@
     "message": "Advanced",
     "description": "Advanced settings section title"
   },
-  "fallbackSeekLength": {
-    "message": "Fallback seek duration",
-    "description": "Fallback seek length option label"
-  },
-  "fallbackSeekLengthHelp": {
-    "message": "How many seconds to jump during fallback seek.",
-    "description": "Fallback seek length help text"
-  },
   "seconds": {
     "message": "seconds",
     "description": "Time unit suffix"
@@ -84,7 +76,7 @@
     "description": "Skip delay option label"
   },
   "skipDelayHelp": {
-    "message": "Delay before attempting to skip segments (seconds)",
+    "message": "Delay before skipping intros and endings (seconds). Recaps and previews are skipped without an added delay.",
     "description": "Skip delay help text"
   },
   "hotkey": {
@@ -96,11 +88,11 @@
     "description": "Customizable hotkey help text"
   },
   "keyboardShortcut": {
-    "message": "Keyboard Shortcut (D)",
+    "message": "Keyboard Shortcut ({hotkey})",
     "description": "Keyboard shortcut feature label"
   },
   "keyboardShortcutHelp": {
-    "message": "Press 'D' to disable auto-skip for the current segment type. Auto-skip will resume normally when the segment ends.",
+    "message": "Press '{hotkey}' to disable auto-skip for the current segment type. Auto-skip will resume normally when the segment ends.",
     "description": "Keyboard shortcut help text"
   }
 }

@@ -57,7 +57,7 @@ If authenticated Crunchyroll playback is unavailable, report that limitation exp
 
 ## Known documentation and workflow caveats
 
-- The README mentions preview seek fallback and a debug logging option, but the current active skip path does not implement those described features. Inspect code before promising support; do not treat stale documentation or unused helper functions/translation keys as working features.
+- Skipping relies on available player controls. No preview seek fallback or debug toggle is implemented; do not promise timestamp detection or seeking without implementing and verifying it.
 - The default branch is currently `master`, while the release workflow's push trigger targets `main`. Do not fix this incidentally, dispatch the workflow, or create release tags as part of an unrelated task.
 - The release ZIP is produced with `git archive HEAD`, so tracked documentation is included in that archive.
 
