@@ -240,8 +240,9 @@ function setupEventListeners() {
 function init() {
   // Detect browser language
   const browserLang = chrome.i18n.getUILanguage().split("-")[0];
-  const supportedLangs = ["en", "de", "es", "fr"];
-  const defaultLang = supportedLangs.includes(browserLang) ? browserLang : "en";
+  const supportedLangs = ["en", "de", "es", "fr", "pt_BR"];
+  const defaultLang = browserLang === "pt" ? "pt_BR" :
+    supportedLangs.includes(browserLang) ? browserLang : "en";
 
   // Check if user has saved a language preference
   chrome.storage.sync.get({ uiLanguage: defaultLang }, async (stored) => {

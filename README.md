@@ -33,9 +33,11 @@ Open the extension popup to choose what you want to skip.
 | Previews | On | Uses available preview skip buttons without an added delay. |
 | Skip delay | 3 seconds | Choose 0–10 seconds for intros and endings only. |
 | Disable-skip shortcut | D | Temporarily keeps the currently detected segment type. |
-| Popup language | Browser language, or English | Choose English, German, Spanish or French. |
+| Popup language | Browser language, or English | Choose English, German, Spanish, French or Portuguese (Brazil). |
 
 Language, delay and shortcut settings are under **Advanced**. Preferences are saved using Chrome's extension storage and can sync when browser sync is enabled. Player settings changes normally apply to open tabs without refreshing them.
+
+Portuguese player labels currently supported: **Pular recapitulação**, **Pular introdução**, **Pular créditos** and **Pular prévia**.
 
 ## Want to watch an intro or ending?
 
