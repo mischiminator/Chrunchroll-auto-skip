@@ -91,10 +91,10 @@
   function classify(text) {
     const t = normalize(text);
 
-    const aria_text_recap = ["recap", "zusammenfassung", "résumé", "resumen"]
-    const aria_text_intro = ["intro", "opening"];
+    const aria_text_recap = ["recap", "zusammenfassung", "résumé", "resumen", "recapitulação"]
+    const aria_text_intro = ["intro", "opening", "introdução"];
     const aria_text_outro = ["outro", "ending", "credits", "générique", "créditos"];
-    const aria_text_preview = ["preview", "vorschau", "avance", "aperçu"]
+    const aria_text_preview = ["preview", "vorschau", "avance", "aperçu", "prévia"]
 
     if (settings.skipRecaps && containsAny(t, aria_text_recap)) {
       return "recap";
@@ -128,7 +128,7 @@
     const identifiers = ["data-testid", "data-t", "class"].map(name =>
       (el.getAttribute(name) || "").replace(/([a-z])([A-Z])/g, "$1 $2")).join(" ");
     const text = normalize(`${getText(el)} ${identifiers}`).replace(/[_-]+/g, " ");
-    return /(?:^|[^\p{L}\p{N}])(?:skip|überspringen|überspring|omitir|saltar|passer|ignorer)(?=$|[^\p{L}\p{N}])/u.test(text);
+    return /(?:^|[^\p{L}\p{N}])(?:skip|überspringen|überspring|omitir|saltar|passer|ignorer|pular)(?=$|[^\p{L}\p{N}])/u.test(text);
   }
 
   function findButtons() {

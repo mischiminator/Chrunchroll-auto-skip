@@ -22,7 +22,7 @@ Crunchyroll Auto Skip automatically clicks available skip buttons, so you don't 
 - Turn automatic skipping on or off from the extension popup.
 - Set a delay of up to 10 seconds before skipping intros and endings. Recaps and previews are skipped without an added delay.
 - Want to keep watching an intro or ending? Press D while its skip button is showing, before the automatic skip happens. You can choose a different key in the settings.
-- Use the popup in English, German, Spanish or French.
+- Use the popup in English, German, Spanish, French or Portuguese (Brazil).
 - Your preferences are saved for next time.
 
 ### Getting started
