@@ -20,6 +20,12 @@ Watch Crunchyroll with fewer clicks. This Chrome extension automatically uses av
 
 No build step is required. After updating the files, reload the extension and refresh the player again.
 
+## Release downloads
+
+The extension ZIP attached to each release contains only the files needed to run it: the manifest, player and popup files, icons and translations. Extract that ZIP and follow the manual installation steps above. GitHub's separate **Source code** downloads contain the repository, not the trimmed extension package.
+
+Release notes include every commit since the previous published release, with full commit messages, authors and links. The same notes are available as a separate `CHANGELOG.md` download. The first release includes the complete repository history.
+
 ## Settings
 
 Open the extension popup to choose what you want to skip.
