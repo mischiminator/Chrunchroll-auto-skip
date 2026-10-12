@@ -1,44 +1,15 @@
-# Chrome Web Store listing
+# Chrome Web Store listings
 
-Draft copy for the store page. Not published.
+Draft copy for all five supported interface languages. Not published.
 
-## Name
+Each language has its own file with the product name, short description and full description:
 
-Crunchyroll Auto Skip
+- [English (en)](chrome-web-store/en.md)
+- [Deutsch (de)](chrome-web-store/de.md)
+- [Español (es)](chrome-web-store/es.md)
+- [Français (fr)](chrome-web-store/fr.md)
+- [Português — Brasil (pt_BR)](chrome-web-store/pt_BR.md)
 
-## Short description
+Copy the contents of each field separately into the corresponding localized Chrome Web Store listing. The document title, instructions and field headings are not part of the listing text.
 
-Skip the clicking on Crunchyroll. Automatically use available skip buttons for recaps, intros, credits and previews.
-
-## Full description
-
-Enjoy your anime with fewer interruptions.
-
-Crunchyroll Auto Skip automatically clicks available skip buttons, so you don't have to reach for your mouse each time an intro, recap, ending or preview appears.
-
-### Watch your way
-
-- Choose what to skip: recaps, intros, endings/credits and previews.
-- Turn automatic skipping on or off from the extension popup.
-- Set a delay of up to 10 seconds before skipping intros and endings. Recaps and previews are skipped without an added delay.
-- Want to keep watching an intro or ending? Press D while its skip button is showing, before the automatic skip happens. You can choose a different key in the settings.
-- Use the popup in English, German, Spanish, French or Portuguese (Brazil).
-- Your preferences are saved for next time.
-
-### Getting started
-
-Install the extension, refresh your Crunchyroll tab, and start watching. Open the extension popup to choose which sections to skip. Under Advanced, you can change the delay, shortcut key and popup language.
-
-### A few things to know
-
-The extension uses skip buttons provided by Crunchyroll. If an episode doesn't offer a suitable button, it won't skip that section. Availability can vary between episodes, and changes to Crunchyroll's player may affect it.
-
-The shortcut only takes effect while a skip button is showing and before the skip happens. With no added delay, a skip may happen before you have time to press it. Turning automatic skipping off cancels a pending countdown.
-
-This is an independent extension and is not affiliated with or endorsed by Crunchyroll.
-
-### Help and feedback
-
-Questions, suggestions or something not working? Click GitHub at the bottom of the extension popup to open the project's support page in a new tab. You can find the source code and report problems there.
-
-https://github.com/mischiminator/Chrunchroll-auto-skip
+The product name remains **Crunchyroll Auto Skip** in every language. These descriptions document the current extension; adding or editing them does not change its runtime translations or publish a store update.
