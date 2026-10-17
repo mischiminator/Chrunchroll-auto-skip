@@ -251,13 +251,29 @@
     pendingSkipKey = "";
   }
 
+  async function playWithRetry(media, delay = 100, maxRetries = 5) {
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+            await media.play();
+            return; // Playback started successfully
+        } catch (error) {
+            if (attempt === maxRetries) {
+                console.error("Playback failed after all retries:", error);
+                throw error;
+            }
+
+            await new Promise(resolve => setTimeout(resolve, delay));
+        }
+    }
+}
+
   function clickSpecificSkipButton(el, text, type, key) {
     if (!settings.enabled || ignoreCurrentSkipType === type || !el.isConnected ||
         !isVisible(el) || !hasSkipIntent(el) || classify(getText(el)) !== type) return false;
 
     // An outro click can expose the preview control before the native seek ends.
     // Do not issue a second skip while that first player transition is in flight.
-    const video = getMainVideo();
+    let video = getMainVideo();
     if (video?.seeking) return false;
 
     const now = Date.now();
@@ -274,6 +290,22 @@
     lastActionKey = key;
     lastActionAt = now;
     log("clicked", { type, text, href: location.href, top: window === window.top });
+
+    while(video.seeking) {
+      log("waiting for seek to finish");
+    }
+
+    video = getMainVideo();
+
+    /* 
+     * FIX: Sometimes the player gets stuck after skipping the outro.
+     * The player needs to be forced to play again to transition to the next episode.
+     */
+
+    if(type === "outro") {
+      playWithRetry(video);
+    }
+
     return true;
   }
 
