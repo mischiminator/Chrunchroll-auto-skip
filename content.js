@@ -291,22 +291,39 @@
     lastActionAt = now;
     log("clicked", { type, text, href: location.href, top: window === window.top });
 
-    while(video.seeking) {
-      log("waiting for seek to finish");
-    }
-
-    video = getMainVideo();
-
-    /* 
+    /*
      * FIX: Sometimes the player gets stuck after skipping the outro.
      * The player needs to be forced to play again to transition to the next episode.
      */
-
-    if(type === "outro") {
-      playWithRetry(video);
+    if (type === "outro") {
+      resumeAfterSeek().catch(err => log("resume after outro skip failed", err));
     }
 
     return true;
+  }
+
+  // Never busy-wait on `seeking`: the seek only completes once the event loop
+  // runs, so a synchronous loop freezes the frame forever.
+  function waitForSeekEnd(video, timeoutMs = 5000) {
+    if (!video?.seeking) return Promise.resolve();
+    return new Promise(resolve => {
+      const done = () => {
+        clearTimeout(timer);
+        video.removeEventListener("seeked", done);
+        resolve();
+      };
+      const timer = setTimeout(done, timeoutMs);
+      video.addEventListener("seeked", done, { once: true });
+    });
+  }
+
+  async function resumeAfterSeek() {
+    await waitForSeekEnd(getMainVideo());
+    // The player may have swapped its <video> element during the transition.
+    const video = getMainVideo();
+    if (video?.paused && !video.ended) {
+      await playWithRetry(video);
+    }
   }
 
   function runSkipCheck() {
