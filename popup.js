@@ -81,7 +81,7 @@ const DEFAULT_SETTINGS = {
   skipIntros: true,
   skipOutros: true,
   skipPreviews: true,
-  closeEndSlate: false,
+  closeEndSlate: true,
   skipDelay: 3,
   disableSkipHotkey: "d"
 };
