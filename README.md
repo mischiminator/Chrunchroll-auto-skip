@@ -1,6 +1,6 @@
 # Crunchyroll Auto Skip
 
-Watch Crunchyroll with fewer clicks. This Chrome extension automatically uses available skip buttons for recaps, intros, endings/credits and next-episode previews.
+Watch Crunchyroll with fewer clicks. This Chrome extension automatically uses available skip buttons for recaps, intros, endings/credits and next-episode previews, and closes the recommendations screen when playback ends.
 
 **It needs a suitable skip button to appear.** It doesn't detect scene boundaries or jump forward when a button is missing.
 
@@ -37,14 +37,12 @@ Open the extension popup to choose what you want to skip.
 | Intros | On | Uses intro/opening skip buttons after your chosen delay. |
 | Outros | On | Uses ending/credits skip buttons after your chosen delay. |
 | Previews | On | Uses available preview skip buttons without an added delay. |
-| End screen | Off | Closes the recommendations screen shown when playback ends. |
+| End screen | On | Closes the recommendations screen shown when playback ends. |
 | Skip delay | 3 seconds | Choose 0–10 seconds for intros and endings only. |
 | Disable-skip shortcut | D | Temporarily keeps the currently detected segment type. |
 | Popup language | Browser language, or English | Choose English, German, Spanish, French or Portuguese (Brazil). |
 
 Language, delay and shortcut settings are under **Advanced**. Preferences are saved using Chrome's extension storage and can sync when browser sync is enabled. Player settings changes normally apply to open tabs without refreshing them.
-
-Portuguese player labels currently supported: **Pular recapitulação**, **Pular introdução**, **Pular créditos** and **Pular prévia**.
 
 ## Want to watch an intro or ending?
 
@@ -59,18 +57,16 @@ The shortcut is not a global pause. If skipping is immediate, it may happen befo
 - It handles supported embedded Crunchyroll players as well as controls on watch pages. Changes to the site can still affect compatibility.
 - Turning automatic skipping off cancels the pending countdown. Changing a skip setting restarts any pending countdown with the current settings.
 - When the player reports that a skip is still in progress, the extension waits before clicking another skip button, including an ending followed immediately by a preview.
+- After an ending is skipped, the extension resumes playback if the player stays paused, so the next episode can start.
+- The end screen is closed with its own close button as soon as it appears, without a delay. This works regardless of the site language.
 - Zero seconds means no added delay, and the popup preserves that value. Shortcut instructions reflect your chosen key.
 - The shortcut doesn't act while automatic skipping is off or no eligible control is present, and it ignores typing in editable fields.
 
-There is no timestamp detection, preview seek fallback or debug switch. Existing console logging is always on.
-
 ## Permissions and privacy
 
-The extension uses storage to save preferences and access to Crunchyroll pages to find and click controls. Current source contains no analytics or extension-operated backend. Chrome may sync preferences through its own service. Diagnostic console messages can include page URLs, button text and changed settings.
+The extension uses storage to save preferences and access to Crunchyroll pages to find and click controls. Current source contains no analytics or extension-operated backend. Chrome may sync preferences through its own service. Diagnostic console messages can include page paths, button text and changed settings.
 
-## Support and source code
-
-Use the **GitHub** link at the bottom of the extension popup to open this repository in a new tab. You can also reach it with **Tab** and open it with **Enter**.
+## Support
 
 Found a problem or have a suggestion? [Open an issue](https://github.com/mischiminator/Chrunchroll-auto-skip/issues). For skipping problems, include the affected segment, your extension version and settings, and the skip button's wording. Do not include passwords or other private account information.
 
@@ -78,7 +74,7 @@ This is an independent extension and is not affiliated with or endorsed by Crunc
 
 ## Store listing copy
 
-The proposed user-facing description is in [docs/CHROME_WEB_STORE.md](docs/CHROME_WEB_STORE.md).
+Draft Chrome Web Store descriptions for all five supported languages are linked from [docs/CHROME_WEB_STORE.md](docs/CHROME_WEB_STORE.md).
 
 ## License
 
