@@ -160,6 +160,12 @@ h1 {
   opacity: 0.45;
 }
 
+/* The checkbox itself is invisible, so show keyboard focus on its slider. */
+.switch input:focus-visible + .slider {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 2px;
+}
+
 .input-row {
   display: flex;
   align-items: center;
@@ -266,8 +272,26 @@ input[type="text"]:disabled {
   gap: 8px;
 }
 
+/* A real button for keyboard access, styled like the other section titles. */
+button.collapsible-header {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 12px;
+  line-height: inherit;
+  text-align: left;
+}
+
 .collapsible-header:hover {
   opacity: 0.8;
+}
+
+.collapsible-header:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 4px;
+  border-radius: 2px;
 }
 
 .toggle-icon {
@@ -280,13 +304,18 @@ input[type="text"]:disabled {
 .collapsible-content {
   max-height: 500px;
   overflow: hidden;
-  transition: max-height 0.3s ease, opacity 0.3s ease;
+  transition: max-height 0.3s ease, opacity 0.3s ease, visibility 0s;
   opacity: 1;
+  visibility: visible;
 }
 
+/* visibility: hidden also removes the collapsed controls from the tab order;
+   it switches only after the closing animation has finished. */
 .collapsible-content.collapsed {
   max-height: 0;
   opacity: 0;
+  visibility: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease, visibility 0s linear 0.3s;
 }
 
 select {

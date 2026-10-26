@@ -146,9 +146,10 @@ function setupEventListeners() {
   
   if (advancedToggle && advancedContent) {
     advancedToggle.addEventListener("click", () => {
-      advancedContent.classList.toggle("collapsed");
+      const expanded = !advancedContent.classList.toggle("collapsed");
+      advancedToggle.setAttribute("aria-expanded", String(expanded));
       const icon = advancedToggle.querySelector(".toggle-icon");
-      icon.textContent = advancedContent.classList.contains("collapsed") ? "▼" : "▲";
+      icon.textContent = expanded ? "▲" : "▼";
     });
   }
 
