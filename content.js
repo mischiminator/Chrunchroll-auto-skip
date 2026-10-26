@@ -13,12 +13,29 @@
   let lastActionAt = 0;
   let lastActionKey = "";
   let observer = null;
-  let poller = null;
   let ignoreCurrentSkipType = null;
   let currentActiveSkipType = null;
 
-  function log(...args) {
-    console.log("[CR Auto Skip]", ...args);
+  const LOG_PREFIX = "[CR Auto Skip]";
+  // The player runs in the top page and in an embedded frame; tell them apart.
+  const FRAME_LABEL = window === window.top ? "top" : "iframe";
+
+  // Key facts go into the message itself so they are readable without
+  // expanding objects in the console.
+  function log(message) {
+    console.log(LOG_PREFIX, message);
+  }
+
+  function warn(message, error) {
+    console.warn(LOG_PREFIX, message, ...(error === undefined ? [] : [error]));
+  }
+
+  function describeButton(el) {
+    return String(el.getAttribute("aria-label") || el.textContent || "").replace(/\s+/g, " ").trim();
+  }
+
+  function describeLocation() {
+    return location.protocol.startsWith("http") ? location.pathname : location.href;
   }
 
   function loadSettings() {
@@ -38,7 +55,7 @@
       if (key in DEFAULT_SETTINGS) {
         settings[key] = newValue ?? DEFAULT_SETTINGS[key];
         if (key === "enabled" || key.startsWith("skip")) clearPendingSkipTimer();
-        log("setting updated", { key, value: settings[key] });
+        log(`setting ${key} = ${JSON.stringify(settings[key])}`);
       }
     }
     if (!settings.enabled) clearPendingSkipTimer();
@@ -164,33 +181,6 @@
     return found;
   }
 
-  function clickSkipButton() {
-    if (!settings.enabled) return false;
-
-    const now = Date.now();
-
-    for (const { el, text, type } of findButtons()) {
-      const rect = el.getBoundingClientRect();
-      const key = `${type}:${Math.round(rect.x)}:${Math.round(rect.y)}:${text}`;
-
-      if (key === lastActionKey && now - lastActionAt < 2500) {
-        continue;
-      }
-
-      if (!safeClick(el)) {
-        log("failed to click", { text, href: location.href, top: window === window.top });
-        continue;
-      }
-
-      lastActionKey = key;
-      lastActionAt = now;
-      log("clicked", { type, text, href: location.href, top: window === window.top });
-      return true;
-    }
-
-    return false;
-  }
-
   function getMainVideo() {
     const videos = findRoots(document).flatMap(root => [...root.querySelectorAll("video")]);
     if (!videos.length) return null;
@@ -204,28 +194,6 @@
     return videos[0];
   }
 
-  function collectOverlayText() {
-    const roots = findRoots(document);
-    let text = "";
-
-    for (const root of roots) {
-      let nodes = [];
-      try {
-        nodes = [...root.querySelectorAll("button, div, span, p")];
-      } catch {
-        continue;
-      }
-
-      for (const el of nodes.slice(0, 500)) {
-        if (!isVisible(el)) continue;
-        text += " " + getText(el);
-      }
-    }
-
-    return normalize(text);
-  }
-
-
   let pendingSkipTimer = null;
   let pendingSkipKey = "";
 
@@ -234,9 +202,10 @@
     return Math.max(0, Math.min(10, delaySec)) * 1000;
   }
 
-  function getButtonKey(el, text, type) {
-    const rect = el.getBoundingClientRect();
-    return `${type}:${Math.round(rect.x)}:${Math.round(rect.y)}:${text}`;
+  // No position in the key: the button moves when the control bar shows,
+  // which must not restart or cancel a pending delayed skip.
+  function getButtonKey(text, type) {
+    return `${type}:${text}`;
   }
 
   function shouldDelayType(type) {
@@ -258,8 +227,7 @@
             return; // Playback started successfully
         } catch (error) {
             if (attempt === maxRetries) {
-                console.error("Playback failed after all retries:", error);
-                throw error;
+                throw error; // The caller logs it with context
             }
 
             await new Promise(resolve => setTimeout(resolve, delay));
@@ -267,7 +235,7 @@
     }
 }
 
-  function clickSpecificSkipButton(el, text, type, key) {
+  function clickSpecificSkipButton(el, type, key) {
     if (!settings.enabled || ignoreCurrentSkipType === type || !el.isConnected ||
         !isVisible(el) || !hasSkipIntent(el) || classify(getText(el)) !== type) return false;
 
@@ -283,20 +251,20 @@
     }
 
     if (!safeClick(el)) {
-      log("failed to click", { type, text, href: location.href, top: window === window.top });
+      warn(`failed to click ${type} skip ("${describeButton(el)}") [${FRAME_LABEL}]`);
       return false;
     }
 
     lastActionKey = key;
     lastActionAt = now;
-    log("clicked", { type, text, href: location.href, top: window === window.top });
+    log(`clicked ${type} skip ("${describeButton(el)}") [${FRAME_LABEL}]`);
 
     /*
      * FIX: Sometimes the player gets stuck after skipping the outro.
      * The player needs to be forced to play again to transition to the next episode.
      */
     if (type === "outro") {
-      resumeAfterSeek().catch(err => log("resume after outro skip failed", err));
+      resumeAfterSeek().catch(err => warn("could not resume playback after outro skip", err));
     }
 
     return true;
@@ -342,7 +310,7 @@
     }
 
     const { el, text, type } = buttons[0];
-    const key = getButtonKey(el, text, type);
+    const key = getButtonKey(text, type);
 
     // If the skip type changed, reset the ignore flag
     if (currentActiveSkipType !== type) {
@@ -355,25 +323,30 @@
       }
     }
 
-    // Skip this type if it's currently ignored
+    // Skip this type if it's currently ignored (the hotkey handler already logged it)
     if (ignoreCurrentSkipType === type) {
-      log("skipping manual skip for ignored type", { type, text });
       return false;
     }
 
     if (!shouldDelayType(type)) {
       clearPendingSkipTimer();
-      return clickSpecificSkipButton(el, text, type, key);
+      return clickSpecificSkipButton(el, type, key);
     }
 
     const delayMs = getSkipDelayMs();
 
     if (delayMs <= 0) {
       clearPendingSkipTimer();
-      return clickSpecificSkipButton(el, text, type, key);
+      return clickSpecificSkipButton(el, type, key);
     }
 
     if (pendingSkipTimer !== null && pendingSkipKey === key) {
+      return false;
+    }
+
+    // The clicked button stays visible briefly while the player seeks; do not
+    // schedule a second skip for it.
+    if (key === lastActionKey && Date.now() - lastActionAt < 2500) {
       return false;
     }
 
@@ -388,8 +361,8 @@
         return;
       }
 
-      const stillVisible = findButtons().find(({ el: currentEl, text: currentText, type: currentType }) => {
-        return getButtonKey(currentEl, currentText, currentType) === key;
+      const stillVisible = findButtons().find(({ text: currentText, type: currentType }) => {
+        return getButtonKey(currentText, currentType) === key;
       });
 
       if (!stillVisible) {
@@ -397,27 +370,35 @@
         return;
       }
 
-      clickSpecificSkipButton(stillVisible.el, stillVisible.text, stillVisible.type, key);
+      clickSpecificSkipButton(stillVisible.el, stillVisible.type, key);
       pendingSkipKey = "";
     }, delayMs);
 
-    log("scheduled delayed skip", { type, delayMs, text, href: location.href });
+    log(`scheduled ${type} skip in ${delayMs / 1000}s ("${describeButton(el)}") [${FRAME_LABEL}]`);
     return false;
   }
 
-  function forceTick() {
-    // called by observer and interval
-    if (location.href !== currentUrl) {
-      currentUrl = location.href;
-      start();
-      return;
-    }
+  // The player mutates the DOM many times per second, and every check scans all
+  // shadow roots, so mutation bursts are coalesced into one check per interval.
+  const SKIP_CHECK_MIN_INTERVAL_MS = 250;
+  let skipCheckTimer = null;
+  let lastSkipCheckAt = 0;
 
-    try {
-      runSkipCheck();
-    } catch (err) {
-      log("skip error", err);
-    }
+  function scheduleSkipCheck() {
+    if (skipCheckTimer !== null) return;
+
+    const waitMs = Math.max(0, lastSkipCheckAt + SKIP_CHECK_MIN_INTERVAL_MS - Date.now());
+    skipCheckTimer = setTimeout(() => {
+      skipCheckTimer = null;
+      lastSkipCheckAt = Date.now();
+      if (checkUrlChange()) return;
+
+      try {
+        runSkipCheck();
+      } catch (err) {
+        warn("skip check failed", err);
+      }
+    }, waitMs);
   }
 
   function stop() {
@@ -426,9 +407,9 @@
       observer = null;
     }
 
-    if (poller) {
-      clearInterval(poller);
-      poller = null;
+    if (skipCheckTimer !== null) {
+      clearTimeout(skipCheckTimer);
+      skipCheckTimer = null;
     }
 
     clearPendingSkipTimer();
@@ -466,65 +447,42 @@
 
   function start() {
     if (!isPlaybackContext()) {
-      log("start skipped outside a playback context", { href: location.href });
       stop();
       return;
     }
 
-    log("started", { href: location.href });
+    log(`started on ${describeLocation()} [${FRAME_LABEL}]`);
     stop();
 
-    observer = new MutationObserver(forceTick);
+    observer = new MutationObserver(scheduleSkipCheck);
     observer.observe(document.documentElement, {
       childList: true,
       subtree: true,
       attributes: true
     });
 
-    poller = setInterval(forceTick, 700);
-    forceTick();
-  }
-
-  function hookUrlChange(newUrl) {
-    // called on SPA navigation (history API / hashchange)
-    if (newUrl !== currentUrl) {
-      currentUrl = newUrl;
-      start();
-    }
+    scheduleSkipCheck();
   }
 
   let currentUrl = location.href;
-  let urlWatcherInterval = null;
 
-  function startUrlWatcher() {
-    if (urlWatcherInterval !== null) return;
-
-    urlWatcherInterval = setInterval(() => {
-      if (location.href !== currentUrl) {
-        currentUrl = location.href;
-        start();
-      }
-    }, 300);
+  function checkUrlChange() {
+    if (location.href === currentUrl) return false;
+    currentUrl = location.href;
+    start();
+    return true;
   }
 
-  function installLocationChangeHooks() {
-    const origPushState = window.history.pushState;
-    const origReplaceState = window.history.replaceState;
+  // Content scripts run in an isolated world, so wrapping history.pushState here
+  // never sees the page's own SPA navigations. One interval covers both URL
+  // changes and skip buttons the observer may have missed.
+  function startTicker() {
+    setInterval(() => {
+      if (!checkUrlChange() && observer) scheduleSkipCheck();
+    }, 500);
 
-    window.history.pushState = function (state, title, url) {
-      const result = origPushState.apply(this, arguments);
-      hookUrlChange(window.location.href);
-      return result;
-    };
-
-    window.history.replaceState = function (state, title, url) {
-      const result = origReplaceState.apply(this, arguments);
-      hookUrlChange(window.location.href);
-      return result;
-    };
-
-    window.addEventListener("popstate", () => hookUrlChange(window.location.href));
-    window.addEventListener("hashchange", () => hookUrlChange(window.location.href));
+    window.addEventListener("popstate", checkUrlChange);
+    window.addEventListener("hashchange", checkUrlChange);
   }
 
   function installKeyboardShortcuts() {
@@ -545,14 +503,13 @@
           currentActiveSkipType = type;
           // Clear any pending skip timer to prevent scheduled skips
           clearPendingSkipTimer();
-          log("keyboard shortcut: auto-skip disabled for type", { disabledType: type, hotkey });
+          log(`hotkey "${hotkey.toUpperCase()}": not skipping this ${type}`);
         }
       }
     });
   }
 
-  installLocationChangeHooks();
+  startTicker();
   installKeyboardShortcuts();
-  startUrlWatcher();
   loadSettings().then(start);
 })();
