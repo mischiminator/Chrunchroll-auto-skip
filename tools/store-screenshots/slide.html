@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>slide</title>
+<style>
+  :root {
+    --bg: #0d1016;
+    --bg-2: #181a21;
+    --text: #f4f7fb;
+    --sub: #d4dae5;
+    --muted: #a8b0c2;
+    --faint: #7f889a;
+    --accent-2: #ff964f;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1280px; height: 800px; overflow: hidden; }
+  body {
+    position: relative;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  }
+  /* Lighter diagonal panel behind the popup, as in the original set. */
+  .diagonal {
+    position: absolute;
+    inset: 0;
+    background: var(--bg-2);
+    clip-path: polygon(927px 0, 1280px 0, 1280px 800px, 636px 800px);
+  }
+  /* icon128.png has a transparent border; size it so the visible square matches the originals (42px). */
+  .brand { position: absolute; left: 71.5px; top: 63.5px; display: flex; align-items: center; gap: 17.5px; }
+  .brand img { width: 49px; height: 49px; display: block; }
+  .brand span { font-size: 25.4px; font-weight: 700; letter-spacing: -0.6px; }
+  .eyebrow {
+    position: absolute; left: 68px; top: 193px;
+    font-size: 14.5px; font-weight: 700; letter-spacing: 2.65px;
+    color: var(--accent-2); text-transform: uppercase;
+  }
+  h1 {
+    position: absolute; left: 68px; top: 230px; margin: 0;
+    font-size: 64px; line-height: 68px; font-weight: 700; letter-spacing: -2.4px;
+  }
+  .sub {
+    position: absolute; left: 68px; top: 394px; margin: 0; width: 540px;
+    font-size: 23px; line-height: 35px; color: var(--sub);
+  }
+  .muted {
+    position: absolute; left: 68px; margin: 0;
+    font-size: 19px; line-height: 30px; color: var(--muted);
+  }
+  .footer {
+    position: absolute; left: 68px; top: 710px; margin: 0;
+    font-size: 14px; line-height: 21px; color: var(--muted);
+  }
+  .label, .counter {
+    position: absolute; right: 73px; margin: 0;
+    text-transform: uppercase;
+  }
+  .label { top: 37px; font-size: 11px; letter-spacing: 1.9px; color: var(--muted); }
+  .counter { top: 750px; font-size: 11px; letter-spacing: 2.6px; color: var(--faint); }
+  /* The popup is the real popup page, scaled into the area the originals use. */
+  .shot { position: absolute; right: 68px; overflow: hidden; border-radius: 0; }
+  .shot.card { border-radius: 16px; }
+  .shot iframe { border: 0; width: 380px; display: block; transform-origin: 0 0; background: transparent; }
+</style>
+</head>
+<body>
+<div class="diagonal"></div>
+<div class="brand"><img src="icons/icon128.png" alt=""><span>Crunchyroll Auto Skip</span></div>
+<p class="label">Actual extension popup</p>
+<div class="eyebrow" id="eyebrow"></div>
+<h1 id="headline"></h1>
+<p class="sub" id="sub"></p>
+<p class="muted" id="muted"></p>
+<p class="footer">Uses skip buttons provided by Crunchyroll.<br>Independent extension. Not affiliated with Crunchyroll.</p>
+<p class="counter" id="counter"></p>
+<div class="shot" id="shot"><iframe id="popup" scrolling="no"></iframe></div>
+<script>
+const ALL_ON = { enabled: true, skipRecaps: true, skipIntros: true, skipOutros: true, skipPreviews: true, closeEndSlate: true };
+const SLIDES = [
+  { eyebrow: "Choose what to skip", headline: "Less clicking.<br>More watching.",
+    sub: "Automatically use available skip buttons for recaps, intros, credits and previews.",
+    muted: "Keep the sections you enjoy.<br>Skip the ones you don’t.",
+    popup: { mode: "full", settings: ALL_ON } },
+  { eyebrow: "No detour at the end", headline: "Episode over.<br>Screen closed.",
+    sub: "Close the recommendations screen automatically when playback ends.",
+    muted: "On by default.<br>Switch it off any time.",
+    popup: { mode: "segments", settings: ALL_ON } },
+  { eyebrow: "Set your own pace", headline: "A little time.<br>Then skip.",
+    sub: "Choose a 0–10 second delay for intros and endings.",
+    muted: "Recaps and previews skip<br>without an added delay.",
+    popup: { mode: "advanced", open: true, settings: { ...ALL_ON, skipDelay: 5, disableSkipHotkey: "d" } } },
+  { eyebrow: "Keep the intro you love", headline: "One key.<br>Your choice.",
+    sub: "Press your chosen key before the automatic skip to keep watching the current segment.",
+    muted: "D by default.<br>Pick another single-character key.",
+    popup: { mode: "advanced", open: true, settings: { ...ALL_ON, skipDelay: 5, disableSkipHotkey: "k" } } },
+  { eyebrow: "Five popup languages", headline: "Settings in<br>your language.",
+    sub: "English · Deutsch · Español<br>Français · Português (Brasil)",
+    muted: "Choose your popup language<br>under Advanced.",
+    popup: { mode: "advanced", open: true, lang: "pt_BR", settings: { ...ALL_ON, skipDelay: 5, disableSkipHotkey: "k" } } },
+  { eyebrow: "You stay in control", headline: "Skip on.<br>Or switch off.",
+    sub: "Pause automatic skipping whenever you want from the popup.",
+    muted: "Switching off also cancels<br>a pending skip.",
+    popup: { mode: "full", settings: { ...ALL_ON, enabled: false } } },
+];
+const n = Number(new URLSearchParams(location.search).get("n") || 1);
+const slide = SLIDES[n - 1];
+document.getElementById("eyebrow").textContent = slide.eyebrow;
+document.getElementById("headline").innerHTML = slide.headline;
+document.getElementById("sub").innerHTML = slide.sub;
+const muted = document.getElementById("muted");
+muted.innerHTML = slide.muted;
+// Body text sits one gap below the subtitle, whose height depends on wrapping.
+const sub = document.getElementById("sub");
+muted.style.top = (sub.offsetTop + sub.offsetHeight + 27) + "px";
+document.getElementById("counter").textContent = String(n).padStart(2, "0") + " / " + String(SLIDES.length).padStart(2, "0");
+
+const p = slide.popup;
+const query = new URLSearchParams({ lang: p.lang || "en", mode: p.mode, open: p.open ? "1" : "0", settings: JSON.stringify(p.settings) });
+const frame = document.getElementById("popup");
+const shot = document.getElementById("shot");
+if (p.mode !== "full") shot.classList.add("card");
+frame.src = "popup_render.html?" + query;
+window.addEventListener("message", e => {
+  const h = e.data && e.data.popupHeight;
+  if (!h) return;
+  // Fit inside the original popup area: x 720–1212, y 82–717, centered on y ≈ 410.
+  const scale = Math.min(492 / 380, 635 / h);
+  frame.style.height = h + "px";
+  frame.style.transform = `scale(${scale})`;
+  shot.style.width = (380 * scale) + "px";
+  shot.style.height = (h * scale) + "px";
+  // Full popups start at the top of the area; cropped cards are centered like the originals.
+  shot.style.top = (p.mode === "full" ? 82 : Math.max(82, Math.round(426 - (h * scale) / 2))) + "px";
+  document.title = "ready h=" + h + " scale=" + scale.toFixed(3);
+});
+</script>
+</body>
+</html>

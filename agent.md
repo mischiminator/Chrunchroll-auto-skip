@@ -15,6 +15,8 @@ Keep changes focused on the requested task. Do not introduce a framework, build 
 - `icons/`: extension icons.
 - `README.md`: installation and user-facing documentation.
 - `.github/workflows/release.yaml`: self-hosted release job that tags and archives the repository.
+- `docs/chrome-web-store/`: store listing drafts per language and the generated store screenshots.
+- `tools/store-screenshots/`: renders the store screenshots from the real popup with headless Chrome (`generate.py`, slide layout in `slide.html`). Not part of the extension package.
 
 ## Implementation rules
 
