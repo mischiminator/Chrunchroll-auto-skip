@@ -37,6 +37,7 @@ Open the extension popup to choose what you want to skip.
 | Intros | On | Uses intro/opening skip buttons after your chosen delay. |
 | Outros | On | Uses ending/credits skip buttons after your chosen delay. |
 | Previews | On | Uses available preview skip buttons without an added delay. |
+| End screen | Off | Closes the recommendations screen shown when playback ends. |
 | Skip delay | 3 seconds | Choose 0–10 seconds for intros and endings only. |
 | Disable-skip shortcut | D | Temporarily keeps the currently detected segment type. |
 | Popup language | Browser language, or English | Choose English, German, Spanish, French or Portuguese (Brazil). |

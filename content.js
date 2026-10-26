@@ -5,6 +5,7 @@
     skipIntros: true,
     skipOutros: true,
     skipPreviews: true,
+    closeEndSlate: false,
     skipDelay: 3,
     disableSkipHotkey: "d"
   };
@@ -395,10 +396,34 @@
 
       try {
         runSkipCheck();
+        closeEndSlate();
       } catch (err) {
         warn("skip check failed", err);
       }
     }, waitMs);
+  }
+
+  // The recommendations dialog shown when playback ends. Matched by its
+  // unhashed class and data-t attribute, so it does not depend on the UI language.
+  const END_SLATE_CLOSE_SELECTOR = '.erc-end-slate-recommendations-carousel [data-t="close-btn"]';
+  let lastEndSlateCloseAt = 0;
+
+  function closeEndSlate() {
+    if (!settings.enabled || !settings.closeEndSlate) return false;
+    // The dialog can stay in the DOM briefly while it closes; do not click it repeatedly.
+    if (Date.now() - lastEndSlateCloseAt < 2500) return false;
+
+    const button = document.querySelector(END_SLATE_CLOSE_SELECTOR);
+    if (!button || !isVisible(button)) return false;
+
+    if (!safeClick(button)) {
+      warn(`failed to close end screen [${FRAME_LABEL}]`);
+      return false;
+    }
+
+    lastEndSlateCloseAt = Date.now();
+    log(`closed end screen [${FRAME_LABEL}]`);
+    return true;
   }
 
   function stop() {

@@ -55,6 +55,14 @@
     "message": "Ignorez les aperçus du prochain épisode.",
     "description": "Preview skip option help text"
   },
+  "endSlate": {
+    "message": "Écran de fin",
+    "description": "End screen auto-close option label"
+  },
+  "endSlateHelp": {
+    "message": "Fermez l'écran de recommandations à la fin de la lecture.",
+    "description": "End screen auto-close option help text"
+  },
   "advanced": {
     "message": "Avancé",
     "description": "Advanced settings section title"

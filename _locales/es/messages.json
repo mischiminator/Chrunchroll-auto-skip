@@ -55,6 +55,14 @@
     "message": "Omite las previsualizaciones del próximo episodio.",
     "description": "Preview skip option help text"
   },
+  "endSlate": {
+    "message": "Pantalla final",
+    "description": "End screen auto-close option label"
+  },
+  "endSlateHelp": {
+    "message": "Cierra la pantalla de recomendaciones al terminar la reproducción.",
+    "description": "End screen auto-close option help text"
+  },
   "advanced": {
     "message": "Avanzado",
     "description": "Advanced settings section title"

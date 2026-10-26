@@ -55,6 +55,14 @@
     "message": "Skip next-episode previews.",
     "description": "Preview skip option help text"
   },
+  "endSlate": {
+    "message": "End screen",
+    "description": "End screen auto-close option label"
+  },
+  "endSlateHelp": {
+    "message": "Close the recommendations screen when playback ends.",
+    "description": "End screen auto-close option help text"
+  },
   "advanced": {
     "message": "Advanced",
     "description": "Advanced settings section title"

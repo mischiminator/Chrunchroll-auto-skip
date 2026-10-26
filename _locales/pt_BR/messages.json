@@ -55,6 +55,14 @@
     "message": "Pule as prévias do próximo episódio.",
     "description": "Preview skip option help text"
   },
+  "endSlate": {
+    "message": "Tela final",
+    "description": "End screen auto-close option label"
+  },
+  "endSlateHelp": {
+    "message": "Feche a tela de recomendações ao fim da reprodução.",
+    "description": "End screen auto-close option help text"
+  },
   "advanced": {
     "message": "Avançado",
     "description": "Advanced settings section title"

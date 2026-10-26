@@ -23,6 +23,8 @@ const translationMap = {
   "outrosHelp": { selector: "label[for='skipOutros'] .help" },
   "previews": { selector: "label[for='skipPreviews'] .label" },
   "previewsHelp": { selector: "label[for='skipPreviews'] .help" },
+  "endSlate": { selector: "label[for='closeEndSlate'] .label" },
+  "endSlateHelp": { selector: "label[for='closeEndSlate'] .help" },
   
   // Advanced section
   "advanced": { selector: "#advancedLabel" },
@@ -79,6 +81,7 @@ const DEFAULT_SETTINGS = {
   skipIntros: true,
   skipOutros: true,
   skipPreviews: true,
+  closeEndSlate: false,
   skipDelay: 3,
   disableSkipHotkey: "d"
 };
@@ -88,7 +91,8 @@ const TOGGLE_IDS = [
   "skipRecaps",
   "skipIntros",
   "skipOutros",
-  "skipPreviews"
+  "skipPreviews",
+  "closeEndSlate"
 ];
 
 function getEl(id) {
