@@ -24,6 +24,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
 OUT = REPO / "docs" / "chrome-web-store" / "screenshots"
+# The Chrome Web Store accepts at most five screenshots.
+MAX_SLIDES = 5
 CHROME = os.environ.get("CHROME", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
 
 # Replaces chrome.i18n, chrome.storage and the locale fetch used by popup.js.
@@ -105,8 +107,17 @@ def slide_count() -> int:
 def main() -> None:
     if not Path(CHROME).exists():
         sys.exit(f"Chrome not found at {CHROME}; set CHROME to its binary")
-    numbers = [int(n) for n in sys.argv[1:]] or list(range(1, slide_count() + 1))
+    count = slide_count()
+    if count > MAX_SLIDES:
+        sys.exit(f"slide.html defines {count} slides; the store accepts at most {MAX_SLIDES}")
+    numbers = [int(n) for n in sys.argv[1:]] or list(range(1, count + 1))
+    if any(not 1 <= n <= count for n in numbers):
+        sys.exit(f"slide numbers must be between 1 and {count}")
     OUT.mkdir(parents=True, exist_ok=True)
+    # Drop screenshots of slides that no longer exist so they are not uploaded by mistake.
+    for old in OUT.glob("slide-*.png"):
+        if int(old.stem.split("-")[1]) > count:
+            old.unlink()
     with tempfile.TemporaryDirectory() as tmp:
         work = Path(tmp)
         build_page(work)

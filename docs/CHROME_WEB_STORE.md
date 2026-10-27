@@ -16,7 +16,7 @@ The product name remains **Crunchyroll Auto Skip** in every language. These desc
 
 ## Screenshots
 
-The six 1280×800 store screenshots are in [chrome-web-store/screenshots](chrome-web-store/screenshots). They show the real extension popup in its current state, so regenerate them after changing the popup, its texts or its translations:
+The five 1280×800 store screenshots (the store's maximum) are in [chrome-web-store/screenshots](chrome-web-store/screenshots). They show the real extension popup in its current state, so regenerate them after changing the popup, its texts or its translations:
 
 ```sh
 python3 tools/store-screenshots/generate.py
